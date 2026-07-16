@@ -57,11 +57,11 @@ def spec_distance(spec_from, spec_to):
     return dist
 
 
-def dist_matrix(*args):
+def dist_matrix(spec_list):
     dist_matrix = []
-    for n in range(0, len(args)):
+    for n in range(0, len(spec_list)):
         line = []
-        for m in range(0, len(args)):
-            line.append(spec_distance(args[m], args[n]))
+        for m in range(0, len(spec_list)):
+            line.append(spec_distance(spec_list[m], spec_list[n]))
         dist_matrix.append(line)
     return dist_matrix

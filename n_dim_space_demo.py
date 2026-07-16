@@ -17,9 +17,7 @@ vect_b = get_spec_vector(b_ori)
 vect_t = get_spec_vector(t_ori)
 vect_g = [24, 74, 21, 56]
 
-spec_list = [vect_a, vect_b, vect_t, vect_g]
-
-matrix = dist_matrix(spec_list)
+matrix = dist_matrix(vect_a, vect_b, vect_t, vect_g)
 
 matrix_print(matrix)
 

@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 from matplotlib import ticker
-from n_dim_space_demo import *
+from main import *
 
 fig, ax = plt.subplots()
 
