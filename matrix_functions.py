@@ -66,7 +66,7 @@ def matrix_square(matrix):
         k = 0
         while k < (n - m):
             row = []
-            for j in range(0, m+1):
+            for j in range(0, m + 1):
                 row.append(None)
             matrix.append(row)
             k += 1
@@ -88,9 +88,9 @@ def matrix_clear(matrix):
         j += 1
     print("to delete:", delete_arr)
     for d in range(0, len(delete_arr), 2):
-        print(d, delete_arr[d], delete_arr[d+1])
+        print(d, delete_arr[d], delete_arr[d + 1])
         j = delete_arr[d]
-        i = delete_arr[d+1]
+        i = delete_arr[d + 1]
         print(j, i)
         print(matrix[j][i])
     return matrix
@@ -116,7 +116,7 @@ def transpose(matrix):
 b = matrix(1, 2)
 
 matrix_print(b)
-print('---b square:---')
+print("---b square:---")
 matrix_print(matrix_square(b))
-print('---b cleared:---')
+print("---b cleared:---")
 matrix_print(matrix_clear(b))

@@ -3,7 +3,6 @@ import numpy.linalg as lin
 import scipy as sci
 import math
 
-
 """
 get_spec_vector takes a dictionary as input and creates an array of it's values
 """
@@ -57,12 +56,12 @@ def spec_distance(spec_from, spec_to):
     dist = math.sqrt(b)
     return dist
 
+
 def dist_matrix(*args):
     dist_matrix = []
-    for n in range(0,len(args)):
+    for n in range(0, len(args)):
         line = []
         for m in range(0, len(args)):
             line.append(spec_distance(args[m], args[n]))
         dist_matrix.append(line)
     return dist_matrix
-
