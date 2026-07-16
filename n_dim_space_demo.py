@@ -55,7 +55,7 @@ def list_diff(list_1, list_2, absolute):
             else: diff = a-b
             diff_list.append(diff)
     return diff_list
-        
+     
 
 def get_spec_distance(spec_1, spec_2):
     diffs = list_diff(spec_1, spec_2, True)
