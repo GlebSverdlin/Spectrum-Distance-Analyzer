@@ -4,79 +4,57 @@ import numpy.linalg as lin
 import scipy as sci
 import math
 from matplotlib import ticker
+from dist_proc import *
+from matrix_functions import *
+a_ori = {"Ha": 56, "Hb": 43, "O3": 21, "N2": 36}
+b_ori = {"Ha": 61, "Hb": 36, "O3": 27, "N2": 47}
+t_ori = {"Ha": 32, "Hb": 33, "O3": 42, "N2": 49}
+
+
+
+vect_a = get_spec_vector(a_ori)
+vect_b = get_spec_vector(b_ori)
+vect_t = get_spec_vector(t_ori)
+
+matrix_print(dist_matrix(vect_a, vect_b, vect_t))
+
+
 
 
 """
 example dataset: 3 stars, 4 elements each
 """
 
-a_ori = {"Ha": 56, "Hb": 43, "O3": 21, "N2": 36}
-b_ori = {"Ha": 61, "Hb": 36, "O3": 27, "N2": 47}
-t_ori = {"Ha": 32, "Hb": 33, "O3": 42, "N2": 49}
-
-class spec_distance:
-    int dist
-    def __init__(self, from_obj, to_obj): #и from и to - списки величин потоков для соотв. звезд
-        self.spec_from = from_obj
-        self.spec_to = to_obj
-        dist = get_spec_distance(spec_from, spec_to)
-
-    def get_spec_distance(spec_from, spec_to):
-        diffs = list_diff(spec_from, spec_to, True)
-        i = 0
-        while i<len(diffs):
-            a = diffs[i]
-            a = a*a
-            diffs[i]=a
-            i+=1
-        b=0
-        for i in diffs:
-            b+=i
-        dist=math.sqrt(b)
-        return dist
 
 
-def get_spec_vector(list):
-    vector = []
-    for i in list:
-        vector.append(list[i])
-    return vector
 
-def list_diff(list_1, list_2, absolute):
-    if len(list_1)!=len(list_2):
-        raise ValueError('Len 1 != Len 2')
-    else:
-        i=0
-        diff_list = []
-        for i in range(len(list_1)):
-            a = list_1[i]
-            b = list_2[i]
-            if absolute == True: diff = abs(a-b)
-            else: diff = a-b
-            diff_list.append(diff)
-    return diff_list
-     
 
-def get_spec_distance(spec_1, spec_2):
-    diffs = list_diff(spec_1, spec_2, True)
-    i = 0
-    while i<len(diffs):
-        a = diffs[i]
-        a = a*a
-        diffs[i]=a
-        i+=1
-    b=0
-    for i in diffs:
-        b+=i
-    b=math.sqrt(b)
-    return b
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 '''
 
 fig, ax = plt.subplots()
-
-ab = get_spec_distance(a_ori_spec, b_ori_spec)
-at = get_spec_distance(a_ori_spec, t_ori_spec)
-bt = get_spec_distance(b_ori_spec, t_ori_spec)
 
 stars= ['Alpha', 'Beta', 'Tau']
 
@@ -106,3 +84,4 @@ a_ori_spec=get_spec_vector(a_ori)
 b_ori_spec=get_spec_vector(b_ori)
 t_ori_spec=get_spec_vector(t_ori)
 
+'''
