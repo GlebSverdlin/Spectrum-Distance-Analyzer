@@ -15,7 +15,7 @@ training_labels = "/home/gleb/Programming/Python/SpectrumAnalyzer/test_dataset/t
 testing_labels = "/home/gleb/Programming/Python/SpectrumAnalyzer/test_dataset/testing/testing_labels.csv"
 validating_labels = "/home/gleb/Programming/Python/SpectrumAnalyzer/test_dataset/validation/validating_labels.csv"
 
-batch_size = 128
+batch_size = 100
 
 train_dataloader = DataLoader(test_dataset.training_dataset(training_data, training_labels), batch_size, shuffle=True)
 test_dataloader = DataLoader(test_dataset.testing_dataset(training_data, training_labels), batch_size=1, shuffle=True)
@@ -29,15 +29,19 @@ class NeuralNetwork(nn.Module):
         super().__init__()
         self.flatten=nn.Flatten()
         self.stack = nn.Sequential(
-        nn.Linear(6, 128),
+        nn.Linear(6, 100),
         nn.ReLU(),
-        nn.Linear(128, 64),
+        nn.Linear(100, 80),
         nn.ReLU(),
-        nn.Linear(64, 32),
+        nn.Linear(80, 60),
         nn.ReLU(),
-        nn.Linear(32, 2),
+        nn.Linear(60, 40),
         nn.ReLU(),
-        nn.Linear(2,1)
+        nn.Linear(40, 20),
+        nn.ReLU(),
+        nn.Linear(20, 10),
+        nn.ReLU(),
+        nn.Linear(10,1)
         )
     def forward(self, x):
         x = self.flatten(x)
@@ -84,11 +88,15 @@ def train(model, optimizer, loss_fn, train_loader, val_loader, epochs, device):
 
 def predict(model, test_loader, sample_index): 
     for batch in test_loader:
+        labels = [0,1]
         input, label = batch
         output = model(input)
-        print(f'Prediction: ', {output}, 'expected: ', {label})
+        output = output.argmax()
+        prediction = labels[output]
+        print(f'Prediction: ', {prediction}, 'expected: ', {label})
+        break
 
 test_network = NeuralNetwork()
-optimizer = optim.Adam(test_network.parameters(), lr=0.001)
+optimizer = optim.Adam(test_network.parameters(), lr=0.01)
 
 
