@@ -46,9 +46,7 @@ idx_target, idx_obs, sep, _ = search_around_sky(
     2*u.arcsec
 )
 
-print(f"found {len(idx_target)} matches:")
-for i in range(len(idx_target)):
-    print(idx_target[i], ' : ', idx_obs[i])
+print(f"found {len(idx_target)} matches.")
 
 k2_negative_obsid = [[],[]]
 for i in range(len(idx_target)):
@@ -56,20 +54,14 @@ for i in range(len(idx_target)):
     match_index_catalog = idx_obs[i]
     obj = k2_targets_negative['hostname'][match_index_target-1:match_index_target]
     obsid = allspec['obsid'][match_index_catalog-1:match_index_catalog]
-    print(f"Object: {obj}. Observation: {obsid[0]}")
     k2_negative_obsid[0].append(obj)
     k2_negative_obsid[1].append(obsid[0])
 
-for j in range(len(k2_negative_obsid[0])):
-    print(f"Object: {k2_negative_obsid[0][j]}, MAST OBSID: {k2_negative_obsid[1][j]}")
-
-target_obsids = []
-for i in k2_negative_obsid[1]:
-    target_obsids.append(i)
+target_obsids = k2_negative_obsid[1]
 
 products = Observations.get_product_list(target_obsids)
 products = Observations.filter_products(products, mrp_only=True, dataproduct_type='spectrum')
-manifest = Observations.download_products(products, mrp_only=True, curl_flag=True, download_dir='mast_download')
+manifest = Observations.download_products(products, mrp_only=True, curl_flag=True, download_dir='mast_download', flat = True)
 print(manifest)
 
 
