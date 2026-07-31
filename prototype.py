@@ -13,10 +13,6 @@ from astropy.coordinates import search_around_sky
 
 k2_table = "/home/gleb/Astronomy/K2_planet_list.csv"
 kepler_table = "/home/gleb/Astronomy/Kepler_planet_list.csv"
-k2_neg = 'mast_download/k2_neg'
-k2_pos = 'mast_download/k2_pos'
-kep_neg = 'mast_download/kep_neg'
-kep_pos = 'mast_download/kep_pos'
 
 k2 = pd.read_csv(k2_table)
 kepler = pd.read_csv(kepler_table)
@@ -35,7 +31,7 @@ kepler_targets_negative = kepler[koiDisp_False_mask]
 print(f"K2 negative target count: {len(k2_targets_negative)}.")
 print(f"K2 positive target count: {len(k2_targets_positive)}.")
 print(f"Kepler negative target count: {len(kepler_targets_negative)}.")
-print(f"Kepler positive target count: {len(kepler_targets_positive)}.")
+print(f"Kepler positive target count: {len(kepler_targets_negative)}.")
 
 allspec = Observations.query_criteria(
     dataproduct_type="spectrum", provenance_name="apogee", target_classification="STAR"
@@ -49,34 +45,20 @@ kepler_neg_coords = [[kepler_targets_negative["ra"]], [kepler_targets_negative["
 kepler_pos_coords = [[kepler_targets_positive["ra"]], [kepler_targets_positive["dec"]]]
 
 
-<<<<<<< HEAD
-def coordinate_crossmatch(targets, catalog):
-    catalog_ra = catalog[0] * u.degree
-    catalog_dec = catalog[1] * u.degree
-    target_ra = target[0] * u.degree
-    target_dec = target[1] * u.degree
-
-    target_coords = SkyCoord(target_ra, target_dec)
-    catalog_coords = SkyCoord(catalog_ra, catalog_dec)
-
-    id_target, id_catalog, sep, _ = search_around_sky(
-        target_coords[0], catalog_coords[0], 2 * u.arcsec
-=======
 def coordinate_crossmatch(target_ra, target_dec, catalog_ra, catalog_dec):
-    catalog_ra = catalog_ra * u.degree
-    catalog_dec = catalog_dec * u.degree
-    target_ra = target_ra * u.degree
-    target_dec = target_dec * u.degree
+    self.catalog_ra = catalog_ra * u.degree
+    self.catalog_dec = catalog_dec * u.degree
+    self.target_ra = target_ra * u.degree
+    self.target_dec = target_dec * u.degree
 
     target = SkyCoord(target_ra, target_dec)
     catalog = SkyCoord(catalog_ra, catalog_dec)
 
     id_target, id_catalog, sep, _ = search_around_sky(
         target[0], catalog[0], 2 * u.arcsec
->>>>>>> origin
     )
 
-    print(f"Found {len(id_target)} matches.")
+    print(f"Found {len(idx_target)} matches.")
 
     return id_target, id_catalog
 
@@ -94,9 +76,11 @@ def obsid_query(id_catalog, catalog):
 
 
 def download_spectra(obsid_list, download_path, mrp, curl, flat):
+    self.obsid_list = obsid_list
+    self.download_path = download_path
     mrp_only = mrp
     curl_flag = curl
-    print(f'Got {len(obsid_list)} spectra for download. Path: {download_path}. Starting...')
+
     products = Observations.get_product_list(obsid_list)
     products = Observations.filter_products(
         products, mrp_only=mrp_only, dataproduct_type="spectrum"
@@ -109,14 +93,3 @@ def download_spectra(obsid_list, download_path, mrp, curl, flat):
         flat=flat,
     )
     print(manifest)
-
-<<<<<<< HEAD
-id_target, id_catalog = coordinate_crossmatch(k2_pos_coords, allspec_coords)
-obsid = obsid_query(id_catalog, allspec)
-download_spectra(obsid, k2_pos, True, False, False)
-=======
-id_target, id_catalog = coordinate_crossmatch(k2_pos_coords[0], k2_pos_coords[1], allspec_coords[0], allspec_coords[1])
-obsid = obsid_query(id_catalog, allspec)
-#download_spectra(obsid, k2_pos, True, False, True)
->>>>>>> origin
-
