@@ -49,6 +49,19 @@ kepler_neg_coords = [[kepler_targets_negative["ra"]], [kepler_targets_negative["
 kepler_pos_coords = [[kepler_targets_positive["ra"]], [kepler_targets_positive["dec"]]]
 
 
+<<<<<<< HEAD
+def coordinate_crossmatch(targets, catalog):
+    catalog_ra = catalog[0] * u.degree
+    catalog_dec = catalog[1] * u.degree
+    target_ra = target[0] * u.degree
+    target_dec = target[1] * u.degree
+
+    target_coords = SkyCoord(target_ra, target_dec)
+    catalog_coords = SkyCoord(catalog_ra, catalog_dec)
+
+    id_target, id_catalog, sep, _ = search_around_sky(
+        target_coords[0], catalog_coords[0], 2 * u.arcsec
+=======
 def coordinate_crossmatch(target_ra, target_dec, catalog_ra, catalog_dec):
     catalog_ra = catalog_ra * u.degree
     catalog_dec = catalog_dec * u.degree
@@ -60,6 +73,7 @@ def coordinate_crossmatch(target_ra, target_dec, catalog_ra, catalog_dec):
 
     id_target, id_catalog, sep, _ = search_around_sky(
         target[0], catalog[0], 2 * u.arcsec
+>>>>>>> origin
     )
 
     print(f"Found {len(id_target)} matches.")
@@ -96,7 +110,13 @@ def download_spectra(obsid_list, download_path, mrp, curl, flat):
     )
     print(manifest)
 
+<<<<<<< HEAD
+id_target, id_catalog = coordinate_crossmatch(k2_pos_coords, allspec_coords)
+obsid = obsid_query(id_catalog, allspec)
+download_spectra(obsid, k2_pos, True, False, False)
+=======
 id_target, id_catalog = coordinate_crossmatch(k2_pos_coords[0], k2_pos_coords[1], allspec_coords[0], allspec_coords[1])
 obsid = obsid_query(id_catalog, allspec)
 #download_spectra(obsid, k2_pos, True, False, True)
+>>>>>>> origin
 
