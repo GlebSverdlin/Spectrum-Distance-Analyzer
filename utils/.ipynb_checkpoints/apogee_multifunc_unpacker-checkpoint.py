@@ -3,7 +3,6 @@ from astropy.io import fits
 from astropy.table import Table
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.signal import savgol_filter
 
 
 def load_fits(filepath, filetype):
@@ -21,9 +20,9 @@ def load_fits(filepath, filetype):
                 + data[1].header["CDELT1"] * data[0].header["NWAVE"],
                 data[0].header["NWAVE"],
             )
-            
-            masks = data[3].data
-            err = data[2].data
+
+            pixel_mask = data[2].data < 0.1
+            #wave_raw = wave_raw[pixel_mask]
 
         case 'aspcap':
             flux_raw = data[1].data
@@ -35,28 +34,25 @@ def load_fits(filepath, filetype):
                 data[1].header["NAXIS"],
             )
 
-            masks = data[3].data
-            err = data[2].data
+            pixel_mask = data[2].data < 0.1
+
+            flux_raw = flux_raw[pixel_mask]
 
     
 
-    return flux_raw, wave, err, masks
+    return flux_raw, wave
 
 def normalize_spectrum(flux_raw):
+    min = np.min(flux_raw)
+    max = np.max(flux_raw)
+    diff = max - min
 
-    for i in range(len(flux_raw)):
-        if np.isnan(flux_raw[i]):
-            flux_raw[i]=0
+    flux_norm = []
 
-    continuum = savgol_filter(flux_raw, window_length = 100, polyorder = 3)
-    flux_norm = flux_raw/continuum
+    for i in flux_raw:
+        flux = (i-min)/diff
+        flux_norm.append(flux)
+
     return flux_norm
 
-def plot_spectrum(flux, wave, show):
-    plt.figure(figsize = (23, 6))
-    plt.xlim(np.min(wave), np.max(wave))
-    plt.ylim(0.4, 1.3)
-    plt.plot(wave, flux)
-
-    if show:
-        plt.show()
+        
