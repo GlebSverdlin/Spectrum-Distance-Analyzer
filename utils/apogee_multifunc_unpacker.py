@@ -3,8 +3,6 @@ from astropy.io import fits
 from astropy.table import Table
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.signal import savgol_filter
-from scipy.interpolate import UnivariateSpline
 from scipy.interpolate import make_splrep
 
 
