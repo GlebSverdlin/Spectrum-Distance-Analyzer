@@ -10,13 +10,7 @@ import numpy as np
 from astropy import units as u
 from astropy.coordinates import SkyCoord
 from astropy.coordinates import search_around_sky
-
-k2_table = "/home/gleb/Astronomy/K2_planet_list.csv"
-kepler_table = "/home/gleb/Astronomy/Kepler_planet_list.csv"
-k2_neg = 'mast_download/k2_neg'
-k2_pos = 'mast_download/k2_pos'
-kep_neg = 'mast_download/kep_neg'
-kep_pos = 'mast_download/kep_pos'
+from secrets import *
 
 k2 = pd.read_csv(k2_table)
 kepler = pd.read_csv(kepler_table)
