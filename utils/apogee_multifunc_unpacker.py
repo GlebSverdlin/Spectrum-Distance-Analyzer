@@ -19,6 +19,7 @@ def load_fits(filepath, filetype):
                 + data[1].header["CDELT1"] * data[0].header["NWAVE"],
                 data[0].header["NWAVE"],
             )
+            '''
             err = data[2].data[0]
             mask = err < 5
             flux_raw = flux_raw[mask]
@@ -31,7 +32,7 @@ def load_fits(filepath, filetype):
                     bad_pixels.append(bitmask.index(i))
             flux_raw = np.delete(flux_raw, bad_pixels)
             wave = np.delete(wave, bad_pixels)
-
+            '''
         case "aspcap":
             flux_raw = data[1].data
             wave = np.logspace(
@@ -40,10 +41,11 @@ def load_fits(filepath, filetype):
                 + data[1].header["CDELT1"] * data[3].header["NAXIS1"],
                 data[1].header["NAXIS1"],
             )
+            '''
             err = data[2].data < 0.3
             flux_raw = flux_raw[err]
             wave = wave[err]
-
+            '''
     return flux_raw, wave
 
 
