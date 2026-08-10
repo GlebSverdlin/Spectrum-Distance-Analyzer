@@ -5,3 +5,4 @@ utils/secret.py
 dataset/*
 parser_protoype.ipynb
 dataset
+secret.py
