@@ -68,11 +68,16 @@ def normalize_spectrum(wave, flux_raw, high_percentile=95, s_factor=1e-4):
     continuum = np.clip(continuum, 1e-4, None)
     flux_norm = flux_raw / continuum
     
-    flux_min = flux_norm.min()
-    flux_max = flux_norm.max()
-    for i in range(len(flux_norm)):
-        flux_norm[i] = (flux_norm[i]-flux_min)/(flux_max - flux_min)
     return flux_norm
+
+def rescale_spectrum(flux):
+    flux_min = flux.min()
+    flux_max = flux.max()
+    for i in range(len(flux)):
+        flux[i] = (flux[i]-flux_min)/(flux_max - flux_min)
+
+    return flux
+
 
 
 def plot_spectrum(wave, flux, show):
