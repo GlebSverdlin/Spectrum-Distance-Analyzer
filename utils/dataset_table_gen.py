@@ -20,6 +20,16 @@ def filetype(file_params):
     else: filetype = 'ap'
     return [path, name, filetype]
 
+def unpack_ap_first(file_params):
+    unpack_list = []
+    appended = []
+    for file in file_params:
+        name = file[1]
+        if re.search('apStar|asStar', name) != None:
+            unpack_list.append(file[0])
+
+    return unpack_list
+
 def write_as_table(wave, flux, planet, name):
     colnames = [['wave', 'flux', 'planet' ]]
     rows = zip_longest(wave,flux,planet, fillvalue = '')
