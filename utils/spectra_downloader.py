@@ -10,7 +10,7 @@ import numpy as np
 from astropy import units as u
 from astropy.coordinates import SkyCoord
 from astropy.coordinates import search_around_sky
-from secrets import *
+from secret import *
 
 k2 = pd.read_csv(k2_table)
 kepler = pd.read_csv(kepler_table)
@@ -90,7 +90,20 @@ def download_spectra(obsid_list, download_path, mrp, curl, flat):
     )
     print(manifest)
 
-obsid = obsid_query(id_catalog, allspec)
-print(obsid) #для отладки
-#download_spectra(obsid, k2_pos, True, False, True)
+k2_p_idx, k2_pl = coordinate_crossmatch(k2_pos_coords, allspec_coords)
+k2_n_idx, k2_nl = coordinate_crossmatch(k2_neg_coords, allspec_coords)
+kep_p_idx, kep_pl = coordinate_crossmatch(kepler_pos_coords, allspec_coords)
+kep_n_idx, kep_nl = coordinate_crossmatch(kepler_neg_coords, allspec_coords)
+
+k2_pl_obsid = obsid_query(k2_pl, allspec)
+k2_nl_obsid = obsid_query(k2_nl, allspec)
+kep_pl_obsid = obsid_query(kep_pl, allspec)
+kep_nl_obsid = obsid_query(kep_nl, allspec)
+
+download_spectra(kep_pl_obsid, kep_pos, True, False, False)
+download_spectra(kep_nl_obsid, kep_neg, True, False, False)
+download_spectra(k2_pl_obsid, k2_pos, True, False, False)
+download_spectra(k2_nl_obsid, k2_neg, True, False, False)
+
+
 
