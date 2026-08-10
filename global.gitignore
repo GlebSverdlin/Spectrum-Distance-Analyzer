@@ -1,5 +1,7 @@
 mast_download
 analyzer_outdated
 README.md
-secrets.py
+utils/secret.py
+dataset/*
+parser_protoype.ipynb
 dataset
