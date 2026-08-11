@@ -2,7 +2,8 @@ import os
 import csv
 import re
 from itertools import zip_longest
-from secrets import *
+from secret import *
+from apogee_multifunc_unpacker import *
 
 def scan_dir(dirpath):
     dirs = []
@@ -20,20 +21,14 @@ def filetype(file_params):
     else: filetype = 'ap'
     return [path, name, filetype]
 
-def unpack_ap_first(file_params):
-    unpack_list = []
-    appended = []
-    for file in file_params:
-        name = file[1]
-        if re.search('apStar|asStar', name) != None:
-            unpack_list.append(file[0])
+def write_as_table(wave, flux, planet, name, dir):
+    match dir:
+        case 'ap':targ_dir = dataset_ap 
+        case 'aspcap':targ_dir = dataset_aspcap
 
-    return unpack_list
-
-def write_as_table(wave, flux, planet, name):
     colnames = [['wave', 'flux', 'planet' ]]
     rows = zip_longest(wave,flux,planet, fillvalue = '')
-    path = str(dataset+name)
+    path = str(targ_dir+name.replace('.fits', '.csv'))
     
     with open(path, mode='w', newline ='') as file:
         writer=csv.writer(file)
@@ -45,3 +40,32 @@ def write_as_table(wave, flux, planet, name):
         writer.writerows(rows)
 
 
+#----------------------------------
+
+def exec_table_pipeline(path):
+
+    files, dirs = scan_dir(path)
+    
+    if re.search('pos', path): planet = [1]
+    else: planet = [0]
+    print(len(dirs))
+
+    for dir in dirs:
+        name = dir[1]
+        files, subdirs = scan_dir(dir[0])
+
+        for file in files:
+            params = filetype(file)
+            flux_raw, wave = load_fits(params[0], params[2])
+            if params[2] == 'ap': flux_norm = normalize_spectrum(wave, flux_raw)
+            flux_norm = rescale_spectrum(flux_norm)
+            write_as_table(wave, flux_norm, planet, params[1], str(params[2]))
+
+
+
+
+exec_table_pipeline(k2_neg)            
+exec_table_pipeline(k2_pos)
+exec_table_pipeline(kep_pos)
+exec_table_pipeline(kep_neg)
+               

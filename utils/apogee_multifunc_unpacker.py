@@ -25,7 +25,7 @@ def load_fits(filepath, filetype):
             flux_raw = flux_raw[mask]
             wave = wave[mask]
             bitmask = data[3].data[0]
-            bitmask = np.ndarray.tolist(bitmask)
+        bitmask = np.ndarray.tolist(bitmask)
             bad_pixels = []
             for i in bitmask:
                 if bin(i) != bin(0):
@@ -71,12 +71,12 @@ def normalize_spectrum(wave, flux_raw, high_percentile=95, s_factor=1e-4):
     return flux_norm
 
 def rescale_spectrum(flux):
-    flux_min = flux.min()
-    flux_max = flux.max()
-    for i in range(len(flux)):
-        flux[i] = (flux[i]-flux_min)/(flux_max - flux_min)
-
-    return flux
+    flux_min = np.nanmin(flux)
+    flux_max = np.nanmax(flux)
+    flux_resc = []
+    for i in flux:
+        flux_resc.append((i-flux_min)/(flux_max - flux_min))
+    return flux_resc
 
 
 
