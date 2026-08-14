@@ -25,6 +25,7 @@ def write_as_table(wave, flux, planet, name, dir):
     match dir:
         case 'ap':targ_dir = dataset_ap 
         case 'aspcap':targ_dir = dataset_aspcap
+    print(f"targ_dir: {targ_dir}")
 
     colnames = [['wave', 'flux', 'planet' ]]
     rows = zip_longest(wave,flux,planet, fillvalue = '')
@@ -56,10 +57,13 @@ def exec_table_pipeline(path):
 
         for file in files:
             params = filetype(file)
+            print(f'{params[2]}')
             flux_raw, wave = load_fits(params[0], params[2])
-            if params[2] == 'ap': flux_norm = normalize_spectrum(wave, flux_raw)
+            print(f"unpacking as {params[2]}")
+            if params[2] == 'ap': flux_norm = normalize_spectrum(wave, flux_raw); print("normalized")
             flux_norm = rescale_spectrum(flux_norm)
             write_as_table(wave, flux_norm, planet, params[1], str(params[2]))
+            print(f"writing to {params[2]}")
 
 
 
