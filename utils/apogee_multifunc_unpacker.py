@@ -47,7 +47,7 @@ def load_fits(filepath, filetype):
             )
             print('unpacker: asp')
             
-            err = data[2].data < 0.3
+            err = data[2].data < 0.1
             for i in flux_raw:
                 idx = np.ndarray.tolist(flux_raw).index(i)
                 if err[idx] != True:
