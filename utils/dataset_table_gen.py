@@ -4,6 +4,7 @@ import re
 from itertools import zip_longest
 from secret import *
 from apogee_multifunc_unpacker import *
+from sklearn.preprocessing import StandardScaler
 
 def scan_dir(dirpath):
     dirs = []
@@ -60,8 +61,9 @@ def exec_table_pipeline(path):
             print(f'{params[2]}')
             flux_raw, wave = load_fits(params[0], params[2])
             print(f"unpacking as {params[2]}")
-            if params[2] == 'ap': flux_norm = normalize_spectrum(wave, flux_raw); print("normalized")
-            flux_norm = rescale_spectrum(flux_norm)
+            if params[2] == 'ap': flux_norm = normalize_spectrum(wave, flux_raw); print("normalized")            
+            else: flux_norm = flux_raw
+            #flux_norm = rescale_spectrum(flux_norm)
             write_as_table(wave, flux_norm, planet, params[1], str(params[2]))
             print(f"writing to {params[2]}")
 
