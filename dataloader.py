@@ -4,6 +4,7 @@ from secret import *
 from torch.utils.data import Dataset, DataLoader
 import numpy as np
 import logging
+import torch
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +22,7 @@ class SpectralDataset(Dataset):
 
         self.spec_max = 0
         self.spec_min = 10
-
+        
         self.tables = os.scandir(self.data_dir)
         for self.item in self.tables:
             data = pd.read_csv(self.item, usecols=["flux"], index_col=False)
@@ -33,10 +34,15 @@ class SpectralDataset(Dataset):
                 self.spec_max = local_max
             if self.spec_min > local_min:
                 self.spec_min = local_min
-
+        k = 1458
+        l = 1000
         j = int(len(self.spectra) / 8)
-        self.eval = self.spectra[:j]
-        self.train = self.spectra[j:]
+        self.train = self.spectra[:l]
+        self.eval = self.spectra[l:]
+        # k = 400
+        # l = 401
+        # self.eval = self.spectra[5:10]+self.spectra[400:410]
+        # self.train = self.eval
         match purpose:
             case "train":
                 self.spectra = self.train
@@ -52,7 +58,7 @@ class SpectralDataset(Dataset):
         self.zeroes = [i for i in range(0, len(flux)) if flux[i] == 0.0]
         flux_resc = []
         for i in flux:
-            flux_resc.append((i - min) / (max - min))
+            flux_resc.append((i - min) * 10 / (max - min))
         return flux_resc
 
     def __getitem__(self, idx):
@@ -61,10 +67,11 @@ class SpectralDataset(Dataset):
         data = pd.read_csv(path, usecols=["flux"], index_col=False)
         label = pd.read_csv(path, usecols=["planet"], index_col=False)
         label = label.head(1)
-        data = data.to_numpy(dtype=float, na_value=0.0)
-        data = self.rescale_spectrum(data, self.spec_max, self.spec_min)
-        for i in self.zeroes:
-            data[i] = [0.0]
-        data = np.asarray(data)
-        label = label.to_numpy(dtype=float)
+        data = data.to_numpy(dtype=np.double, na_value=0.0)
+        # data = self.rescale_spectrum(data, self.spec_max, self.spec_min)
+        # for i in self.zeroes:
+        #     data[i] = [0.0]
+        data = np.asarray(data).flatten()
+        label = label.to_numpy(dtype=np.double)
+        label = np.asarray(label[0]).flatten() 
         return data, label
