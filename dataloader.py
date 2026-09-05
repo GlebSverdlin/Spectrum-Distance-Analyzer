@@ -34,13 +34,14 @@ class SpectralDataset(Dataset):
                 self.spec_max = local_max
             if self.spec_min > local_min:
                 self.spec_min = local_min
-        k = 1458
-        l = 1000
+        
+        k = 400
+        l = 500
+
         j = int(len(self.spectra) / 8)
-        self.train = self.spectra[:l]
+        self.train = self.spectra[:100]+self.spectra[k:l]
         self.eval = self.spectra[l:]
-        # k = 400
-        # l = 401
+
         # self.eval = self.spectra[5:10]+self.spectra[400:410]
         # self.train = self.eval
         match purpose:

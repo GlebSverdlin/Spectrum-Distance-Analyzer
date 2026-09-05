@@ -31,15 +31,13 @@ class NeuralNetwork(nn.Module):
         def __init__(self):
                 super().__init__()
                 self.neural_stack=nn.Sequential(
-                        nn.Linear(8575, 4096),
-                        nn.LeakyReLU(),
-                        nn.Linear(4096, 2048),
+                        nn.Linear(8575, 2048),
                         nn.LeakyReLU(),
                         nn.Linear(2048, 1024),
                         nn.LeakyReLU(),
                         nn.Linear(1024, 512),
                         nn.LeakyReLU(),
-                        nn.Linear(512, 128),
+                        nn.Linear(512, 256),
                         nn.LeakyReLU(),
                         nn.Linear(256, 128),
                         nn.LeakyReLU(),
@@ -126,7 +124,7 @@ def eval_network(loader, model, loss_fn):
     size = len(loader.dataset)
     num_batches = len(loader)
     test_loss, correct = 0, 0
-
+#TODO:percentage calculation rework
     with torch.no_grad():
         for features, labels in loader:
             predictions = model(features)
