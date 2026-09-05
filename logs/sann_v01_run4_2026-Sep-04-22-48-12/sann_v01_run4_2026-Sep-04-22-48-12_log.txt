@@ -1,0 +1,43 @@
+
+=================MODEL=================
+NeuralNetwork(
+  (neural_stack): Sequential(
+    (0): Linear(in_features=8575, out_features=2048, bias=True)
+    (1): LeakyReLU(negative_slope=0.01)
+    (2): Linear(in_features=2048, out_features=1024, bias=True)
+    (3): LeakyReLU(negative_slope=0.01)
+    (4): Linear(in_features=1024, out_features=512, bias=True)
+    (5): LeakyReLU(negative_slope=0.01)
+    (6): Linear(in_features=512, out_features=256, bias=True)
+    (7): LeakyReLU(negative_slope=0.01)
+    (8): Linear(in_features=256, out_features=128, bias=True)
+    (9): LeakyReLU(negative_slope=0.01)
+    (10): Linear(in_features=128, out_features=50, bias=True)
+    (11): LeakyReLU(negative_slope=0.01)
+    (12): Linear(in_features=50, out_features=30, bias=True)
+    (13): LeakyReLU(negative_slope=0.01)
+    (14): Linear(in_features=30, out_features=5, bias=True)
+    (15): LeakyReLU(negative_slope=0.01)
+    (16): Linear(in_features=5, out_features=1, bias=True)
+    (17): Sigmoid()
+  )
+)
+================OPTIMIZER================
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    decoupled_weight_decay: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.0001
+    maximize: False
+    weight_decay: 0
+)
+================LOSS FUNC================
+BCELoss()
+================LOSSES================
+[0.9020437876098448, 0.694022031171135, 0.6810437451159023, 0.759977072931226, 0.6737253839855231, 0.6156189023921915, 0.6401916852442516, 0.6491060367691942, 0.7119152492998448, 0.6874482349560171, 0.6187696755089004, 0.6898962511418575, 0.6909844220626196, 0.677607146784496, 0.681919780877283, 0.6574537245913644, 0.6822786392302277, 0.7439236605196764, 0.7408912610466167, 0.6375915860998919, 0.672622946295719, 0.6785653085871777, 0.6308608293427803, 0.64794515146224, 0.6437753659179246, 0.6576546801129339, 0.5753627713627238, 0.671663958528512, 0.6848660532719362, 0.7221951881762003, 0.6668239053852599, 0.656459817509684, 0.6492043963333686, 0.6676630357420413, 0.6989551004265447, 0.6912658888176045, 0.7313939815939371, 0.6418421084272737, 0.5875054013712461, 0.6253873736133253, 0.682020666448087, 0.6817464351215571, 0.6552368225102554, 0.6888476817766217, 0.6941643193395591, 0.618691825001562, 0.6824723098151355, 0.6118667834070399, 0.6605240977085187, 0.7062928851449465]

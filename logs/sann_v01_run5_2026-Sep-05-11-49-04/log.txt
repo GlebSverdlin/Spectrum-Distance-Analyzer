@@ -1,0 +1,44 @@
+COMMENT:
+Run 05: test run before optimizer rework. Run on reduced dataset: 200/1800. 50 epochs, BCE, Adam.
+=================MODEL=================
+NeuralNetwork(
+  (neural_stack): Sequential(
+    (0): Linear(in_features=8575, out_features=2048, bias=True)
+    (1): LeakyReLU(negative_slope=0.01)
+    (2): Linear(in_features=2048, out_features=1024, bias=True)
+    (3): LeakyReLU(negative_slope=0.01)
+    (4): Linear(in_features=1024, out_features=512, bias=True)
+    (5): LeakyReLU(negative_slope=0.01)
+    (6): Linear(in_features=512, out_features=256, bias=True)
+    (7): LeakyReLU(negative_slope=0.01)
+    (8): Linear(in_features=256, out_features=128, bias=True)
+    (9): LeakyReLU(negative_slope=0.01)
+    (10): Linear(in_features=128, out_features=50, bias=True)
+    (11): LeakyReLU(negative_slope=0.01)
+    (12): Linear(in_features=50, out_features=30, bias=True)
+    (13): LeakyReLU(negative_slope=0.01)
+    (14): Linear(in_features=30, out_features=5, bias=True)
+    (15): LeakyReLU(negative_slope=0.01)
+    (16): Linear(in_features=5, out_features=1, bias=True)
+    (17): Sigmoid()
+  )
+)
+================OPTIMIZER================
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    decoupled_weight_decay: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.0001
+    maximize: False
+    weight_decay: 0
+)
+================LOSS FUNC================
+BCELoss()
+================LOSSES================
+[0.8407174892311627, 0.6964654621731398, 2.205969011857053, 0.6569883329239499, 0.6752254669384515, 0.6737316343597788, 0.6611237500326143, 0.687509285285392, 0.6838032211520481, 0.6728241310038224, 0.686005164460637, 0.6575588661671529, 0.6550589104498599, 0.6547074971556595, 0.6725682276426213, 0.6873648491313747, 0.7027329859765795, 0.7240039686902032, 0.698282170294904, 0.7167731656764383, 0.6967660733266693, 0.6937942365538696, 0.6859889306929186, 0.71344214906546, 0.7295024442914672, 0.655905719437877, 0.7368317407301646, 0.6711554198496081, 0.68556213558498, 0.7015586987641724, 0.6350587042229475, 0.6385044536178007, 0.6710598791957338, 0.6834500947666539, 0.734928298522317, 0.6551952044245216, 0.6345609954394932, 0.6821536461179126, 0.7229489803889453, 0.7015090981507609, 0.6369671679525316, 0.5606400183829587, 0.6463850611003602, 0.6642086258541704, 0.6388064469135268, 0.6055356560677463, 0.6120549579793618, 0.6907788839296134, 0.6484001620032266, 0.614433760223675]
