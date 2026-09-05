@@ -6,3 +6,4 @@ dataset/*
 parser_protoype.ipynb
 dataset
 secret.py
+models/*
