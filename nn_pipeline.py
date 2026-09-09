@@ -7,7 +7,7 @@ comment = input()
 
 network = start_network()
 
-optimizer, loss_fn, epochs, train_dl, eval_dl = init_parameters(network, 1e-4, 30, 50)
+optimizer, loss_fn, epochs, train_dl, eval_dl = init_parameters(network, 5e-5, 30, 2000)
 
 #ВОТ ЭТО МЕНЯТЬ ВРУЧНУЮ КАЖДЫЙ ЗАПУСК!!!
 print('ПРОВЕРИТЬ ОБНОВЛЕНИЕ ДАННЫХ ЛОГГИРОВАНИЯ')
@@ -20,7 +20,7 @@ os.mkdir(log_path)
 
 print(f"Run:{run}, model: {network}, logging to {log_path}.")
 
-tr = train_network(train_dl, network, loss_fn, optimizer, epochs)
+tr, itr = train_network(train_dl, network, loss_fn, optimizer, epochs)
 
 with open(f"{log_path}/log.txt",'x') as file:
     file.write("COMMENT:\n")
@@ -32,11 +32,16 @@ with open(f"{log_path}/log.txt",'x') as file:
     file.write("\n================LOSS FUNC================\n")
     file.write(str(loss_fn))
     file.write("\n================LOSSES================\n")
-    file.write(str(tr))
+    iterations = []
+    for i in range(len(tr)):
+        iterations.append(itr[i])
+        iterations.append(tr[i])
+
+    file.write(str(iterations))
 
 plt.plot(np.linspace(0, len(tr), num = len(tr)), tr)
-plt.savefig(f"{log_path}/{data_name}.pdf")
 plt.show()
+plt.savefig(f"{log_path}/{data_name}.pdf")
 print('ПРОВЕРИТЬ ОБНОВЛЕНИЕ ДАННЫХ ЛОГГИРОВАНИЯ')
 
 eval_network(eval_dl, network, loss_fn)

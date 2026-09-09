@@ -84,7 +84,7 @@ def init_parameters(model, learn_rate, batch, epochs):
         # optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
         loss = nn.BCELoss()
         train_dataloader = DataLoader(train_data, batch_size=batch, shuffle = True)
-        eval_dataloader = DataLoader(eval_data, batch_size=batch, shuffle=False)
+        eval_dataloader = DataLoader(eval_data, batch_size=len(eval_data), shuffle=False)
 
         print(f"Optimizer: {optimizer}")
         print(f"Loss function: {loss}")
@@ -98,6 +98,8 @@ def init_parameters(model, learn_rate, batch, epochs):
 
 def train_network(loader, model, loss_fn, optimizer, epochs):
         losses = []
+        iters = []
+        step_num = []
         for epoch in range(epochs):
                 size = len(loader.dataset)
                 model.train()
@@ -109,14 +111,16 @@ def train_network(loader, model, loss_fn, optimizer, epochs):
                         loss.backward()
                         optimizer.step() 
                         optimizer.zero_grad()
-
+                        
+                        step_num+=1
                                           
                         if iter % 100 == 0:
                             loss = loss.item()
                             print(f"loss: {loss:>7f}")
                             losses.append(loss)
+                            iters.append(step_num)
         torch.save(model.state_dict(), PATH+name)
-        return losses
+        return losses, step_num
 
                                        
 def eval_network(loader, model, loss_fn):
