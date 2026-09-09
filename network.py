@@ -7,7 +7,7 @@ from dataloader import *
 import matplotlib.pyplot as plt
 import numpy as np 
 
-name = 'sann_v01' 
+name = 'sann_v01_2' 
 
 device = torch.accelerator.current_accelerator().type if torch.accelerator.is_available() else "cpu"
 print(f"Using {device} device")
@@ -99,7 +99,7 @@ def init_parameters(model, learn_rate, batch, epochs):
 def train_network(loader, model, loss_fn, optimizer, epochs):
         losses = []
         iters = []
-        step_num = []
+        step_num = 0
         for epoch in range(epochs):
                 size = len(loader.dataset)
                 model.train()
@@ -112,15 +112,16 @@ def train_network(loader, model, loss_fn, optimizer, epochs):
                         optimizer.step() 
                         optimizer.zero_grad()
                         
-                        step_num+=1
-                                          
+                                                                  
                         if iter % 100 == 0:
+                            step_num+=1
                             loss = loss.item()
+                            print(f"iteration: {step_num}")
                             print(f"loss: {loss:>7f}")
                             losses.append(loss)
                             iters.append(step_num)
         torch.save(model.state_dict(), PATH+name)
-        return losses, step_num
+        return losses, iters
 
                                        
 def eval_network(loader, model, loss_fn):
