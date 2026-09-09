@@ -1,0 +1,26 @@
+COMMENT:
+run 08, optimizing algorithm: siman + 5 iterations of adam, reduced dataset: 200/1800, bce
+=================MODEL=================
+NeuralNetwork(
+  (neural_stack): Sequential(
+    (0): Linear(in_features=8575, out_features=2048, bias=True)
+    (1): LeakyReLU(negative_slope=0.01)
+    (2): Linear(in_features=2048, out_features=1024, bias=True)
+    (3): LeakyReLU(negative_slope=0.01)
+    (4): Linear(in_features=1024, out_features=512, bias=True)
+    (5): LeakyReLU(negative_slope=0.01)
+    (6): Linear(in_features=512, out_features=256, bias=True)
+    (7): LeakyReLU(negative_slope=0.01)
+    (8): Linear(in_features=256, out_features=128, bias=True)
+    (9): LeakyReLU(negative_slope=0.01)
+    (10): Linear(in_features=128, out_features=50, bias=True)
+    (11): LeakyReLU(negative_slope=0.01)
+    (12): Linear(in_features=50, out_features=30, bias=True)
+    (13): LeakyReLU(negative_slope=0.01)
+    (14): Linear(in_features=30, out_features=5, bias=True)
+    (15): LeakyReLU(negative_slope=0.01)
+    (16): Linear(in_features=5, out_features=1, bias=True)
+    (17): Sigmoid()
+  )
+)
+================OPTIMIZER================
