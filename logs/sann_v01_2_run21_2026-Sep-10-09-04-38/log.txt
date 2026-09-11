@@ -1,5 +1,5 @@
 COMMENT:
-run 21: last hyperparameter update (lr 5e-05->1e-05) has show better model convergence for cuttent dataset size. This is a 1000-epoch test run to check model convergence for 1400-item dataset. Lr 1e-05, dataset 1400/1800, bs learn 30 eval full, bce, adam. 1000 epochs.
+run 21: last hyperparameter update (lr 5e-05->1e-05) has shown better model convergence for cuttent dataset size. This is a 1000-epoch test run to check model convergence for 1400-item dataset. Lr 1e-05, dataset 1400/1800, bs learn 30 eval full, bce, adam. 1000 epochs.
 =================MODEL=================
 NeuralNetwork(
   (neural_stack): Sequential(
