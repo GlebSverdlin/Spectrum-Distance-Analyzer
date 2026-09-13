@@ -13,6 +13,7 @@ def plot_losses(losses):
     avrg = np.average(tr)
     max_idx = tr.index(max)
     min_idx = tr.index(min)
+    median = np.median(tr)
         
     fig, ax = plt.subplots(ncols=1, nrows=1, figsize=(15,7))
 
@@ -21,5 +22,6 @@ def plot_losses(losses):
     plt.plot(np.linspace(0, len(tr), num = len(tr)), tr)
     plt.plot(np.linspace(0, len(tr), num = len(tr)), tr_filter, color = 'r')
     plt.plot(1,1,color='w')
-    plt.legend([str("Max: " + str(max)+'; Idx: '+str(max_idx)), str('Min: ' + str(min)+'; Idx: '+str(min_idx)),str('Avrg: '+ str(avrg))])
+    plt.plot(1,1,color='w')
+    plt.legend([str("Max: " + str(max)+'; Idx: '+str(max_idx)), str('Min: ' + str(min)+'; Idx: '+str(min_idx)),str('Avrg: '+ str(avrg)), str('Mdn: '+str(median))])
     plt.show()
