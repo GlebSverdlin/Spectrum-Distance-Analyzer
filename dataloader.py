@@ -5,6 +5,7 @@ from torch.utils.data import Dataset, DataLoader
 import numpy as np
 import logging
 import torch
+import random
 
 logger = logging.getLogger(__name__)
 
@@ -17,8 +18,10 @@ class SpectralDataset(Dataset):
             case "aspcap":
                 self.data_dir = dataset_aspcap
         self.spectra = []
+        labels = []
         for i in os.scandir(self.data_dir):
             self.spectra.append(i.name)
+            labels.append(pd.read_csv(self.data_dir+i.name, usecols=["planet"], index_col=False))
 
         self.spec_max = 0
         self.spec_min = 10
@@ -35,15 +38,29 @@ class SpectralDataset(Dataset):
             if self.spec_min > local_min:
                 self.spec_min = local_min
         
-        k = 400
-        l = 500
+        print(np.shape(self.spectra))
+        print(self.spectra[0])
+        print(type(self.spectra))
+        train_length = 1600
+
+        positives = []
+        negatives = []
+ 
+        for i, item in enumerate(self.spectra):
+            if labels[i].to_numpy()[0] == 1:
+                positives.append(self.spectra[i])
+            else:
+                negatives.append(self.spectra[i])
+ 
+        print(f'Pos: {len(positives)}')
+        print(f'Neg: {len(negatives)}')
 
         j = int(len(self.spectra) / 8)
-        self.train = self.spectra[:100]+self.spectra[k:l]
-        self.eval = self.spectra[l:]
-
-        # self.eval = self.spectra[5:10]+self.spectra[400:410]
-        # self.train = self.eval
+    
+        self.train = negatives[:int(train_length/2)]+positives[:int(train_length/2)]
+        self.eval = negatives[int(train_length/2):]+positives[int(train_length/2):]
+        random.shuffle(self.train)
+                  
         match purpose:
             case "train":
                 self.spectra = self.train
