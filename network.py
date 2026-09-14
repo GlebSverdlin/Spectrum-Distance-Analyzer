@@ -66,7 +66,7 @@ def print_weights(model, msg):
     for name, p in model.named_parameters():
         print(
             name,
-            "mean =", p.data.mean().item(),
+    "mean =", p.data.mean().item(),
             "max =", p.data.abs().max().item(),
         )
 
@@ -120,8 +120,7 @@ def train_network(loader, model, loss_fn, optimizer, epochs):
                             print(f"loss: {loss:>7f}")
                             losses.append(loss)
                             iters.append(step_num)
-        torch.save(model.state_dict(), PATH+name)
-        return losses, iters
+        return losses, iters, model
 
                                        
 def eval_network(loader, model, loss_fn):

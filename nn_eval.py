@@ -26,6 +26,12 @@ try:
 
 except: print(str(getopt.error))
 
+name = 'sann_v01_2'
+date = str(datetime.datetime.now().strftime("%Y-%b-%d-%H-%M-%S"))
+data_name = str(name+"_"+date)
+log_path = str(eval_logging)+str(data_name)
+os.mkdir(log_path)
+
 eval_data = SpectralDataset('aspcap', 'eval')
 
 model = NeuralNetwork()
@@ -65,10 +71,19 @@ print(f'Average error: {average}')
 plt.plot(np.linspace(0, len(answers), num = len(answers)), corrects, 'x')
 plt.plot(np.linspace(0, len(answers), num = len(answers)), answers, 'rx')
 
-with open(f"{eval_logging}/log.txt", 'x') as file:
+text = []
+
+for i in range(len(answers)):
+    text.append(corrects[i])
+    text.append(answers[i])
+
+with open(f"{log_path}/log.txt", 'x') as file:
     file.write(f'Tested model: {model_name}')
-    file.write(f'')
+    file.write(f'Answers:')
+    file.write(f'{str(text)}')
 plt.show()
+
+plt.savefig(f"{log_path}/fig.pdf")
 
 
 
