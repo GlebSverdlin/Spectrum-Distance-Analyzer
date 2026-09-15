@@ -12,8 +12,8 @@ optimizer, loss_fn, epochs, train_dl, eval_dl = init_parameters(network, 1e-5, 3
 
 #ВОТ ЭТО МЕНЯТЬ ВРУЧНУЮ КАЖДЫЙ ЗАПУСК!!!
 print('ПРОВЕРИТЬ ОБНОВЛЕНИЕ ДАННЫХ ЛОГГИРОВАНИЯ')
-run = 'run22'
-name = 'sann_v01_2'
+run = 'run25'
+name = 'sann_v01_2_2'
 date = str(datetime.datetime.now().strftime("%Y-%b-%d-%H-%M-%S"))
 data_name = str(name+"_"+run+"_"+date)
 log_path = str(logging)+str(data_name)
@@ -26,7 +26,7 @@ tr, itr, model = train_network(train_dl, network, loss_fn, optimizer, epochs)
 
 torch.save(model.state_dict(), PATH+name+run+date)
 
-with open(f" {log_path}/log.txt",'x') as file:
+with open(f"{log_path}/log.txt",'x') as file:
     file.write("COMMENT:\n")
     file.write(comment)
     file.write("\n=================MODEL=================\n")

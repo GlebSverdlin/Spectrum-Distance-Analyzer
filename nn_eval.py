@@ -74,11 +74,11 @@ plt.plot(np.linspace(0, len(answers), num = len(answers)), answers, 'rx')
 text = []
 
 for i in range(len(answers)):
-    text.append(corrects[i])
-    text.append(answers[i])
+    text.append(corrects[i].item())
+    text.append(answers[i].item())
 
 with open(f"{log_path}/log.txt", 'x') as file:
-    file.write(f'Tested model: {model_name}')
+    file.write(f'Tested model: {model_name}\n')
     file.write(f'Answers:')
     file.write(f'{str(text)}')
 plt.show()
