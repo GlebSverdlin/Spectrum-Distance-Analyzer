@@ -1,5 +1,5 @@
 COMMENT:
-run 24: last training run with 3000 epochs has shown model hasn't lerned a thing (av. error 0.513), hence reducing epochs to 2000. lr 1e-05, bs 30, bce, adam, 2000 epochs, training a labrat model version
+run 24: last training run with 3000 epochs has shown model hasn't lea:rned a thing (av. error 0.513), hence reducing epochs to 2000. lr 1e-05, bs 30, bce, adam, 2000 epochs, training a labrat model version
 =================MODEL=================
 NeuralNetwork(
   (neural_stack): Sequential(
