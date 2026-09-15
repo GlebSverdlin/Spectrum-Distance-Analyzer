@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import numpy as np
 
-def plot_losses(losses):
+def plot_losses(losses, save):
     tr = []
     for i in losses:
         if losses.index(i)%2!=0:
@@ -25,3 +25,20 @@ def plot_losses(losses):
     plt.plot(1,1,color='w')
     plt.legend([str("Max: " + str(max)+'; Idx: '+str(max_idx)), str('Min: ' + str(min)+'; Idx: '+str(min_idx)),str('Avrg: '+ str(avrg)), str('Mdn: '+str(median))])
     plt.show()
+
+def plot_eval(data):
+    answers = []
+    corrects = []
+    
+    for i in data:
+        if data.index(i)%2!=0:
+            answers.append(i)
+            corrects.append(data[data.index(i)-1])
+
+    
+    plt.plot(np.linspace(0, len(answers), num = len(answers)), corrects, 'x')
+    plt.plot(np.linspace(0, len(answers), num = len(answers)), answers, 'rx')
+    plt.show()
+
+
+
