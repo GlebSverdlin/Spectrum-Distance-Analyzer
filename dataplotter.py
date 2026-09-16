@@ -34,10 +34,13 @@ def plot_eval(data):
         if data.index(i)%2!=0:
             answers.append(i)
             corrects.append(data[data.index(i)-1])
-
     
-    plt.plot(np.linspace(0, len(answers), num = len(answers)), corrects, 'x')
-    plt.plot(np.linspace(0, len(answers), num = len(answers)), answers, 'rx')
+    plt.style.use('bmh')
+    plt.plot(np.linspace(0, len(answers), num = len(answers)), corrects, '_')
+    plt.scatter(np.linspace(0, len(answers), num = len(answers)), answers, c = errors, cmap = 'plasma', marker='x')
+    plt.colorbar()
+    plt.legend(['Average: '+str(average)])
+
     plt.show()
 
 
