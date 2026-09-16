@@ -13,7 +13,6 @@ optimizer, loss_fn, epochs, train_dl, eval_dl = init_parameters(network, 1e-5, 3
 #ВОТ ЭТО МЕНЯТЬ ВРУЧНУЮ КАЖДЫЙ ЗАПУСК!!!
 print('ПРОВЕРИТЬ ОБНОВЛЕНИЕ ДАННЫХ ЛОГГИРОВАНИЯ')
 run = 'run25'
-name = 'sann_v01_2_2'
 date = str(datetime.datetime.now().strftime("%Y-%b-%d-%H-%M-%S"))
 data_name = str(name+"_"+run+"_"+date)
 log_path = str(logging)+str(data_name)

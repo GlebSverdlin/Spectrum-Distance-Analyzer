@@ -26,7 +26,7 @@ try:
 
 except: print(str(getopt.error))
 
-name = 'sann_v01_2'
+
 date = str(datetime.datetime.now().strftime("%Y-%b-%d-%H-%M-%S"))
 data_name = str(name+"_"+date)
 log_path = str(eval_logging)+str(data_name)
@@ -44,7 +44,7 @@ with torch.no_grad():
     answers = []
     corrects = []
 
-    probabilities = []
+    errors = []
 
     prediction_number = len(eval_data)
     for iter, (features, label) in enumerate(eval_dataloader):
@@ -53,8 +53,8 @@ with torch.no_grad():
             correct = label
             
             if correct == 1:
-                probabilities.append(1-probability)
-            else: probabilities.append(probability)
+                errors.append(1-probability)
+            else: errors.append(probability)
 
             print(f'Iteration #{iter}:')
             print(f'Label: {label}')
@@ -64,12 +64,15 @@ with torch.no_grad():
          
             break
 
-average = np.average(probabilities)
+average = np.average(errors)
 
 print(f'Average error: {average}')
 
-plt.plot(np.linspace(0, len(answers), num = len(answers)), corrects, 'x')
-plt.plot(np.linspace(0, len(answers), num = len(answers)), answers, 'rx')
+plt.style.use('bmh')
+plt.plot(np.linspace(0, len(answers), num = len(answers)), corrects, '_')
+plt.scatter(np.linspace(0, len(answers), num = len(answers)), answers, c = errors, cmap = 'plasma', marker='x')
+plt.colorbar()
+plt.legend(['Average: '+str(average)])
 
 text = []
 
