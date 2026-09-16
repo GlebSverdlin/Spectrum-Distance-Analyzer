@@ -6,8 +6,7 @@ import torch.nn.functional as F
 from dataloader import *
 import matplotlib.pyplot as plt
 import numpy as np 
-
-name = 'sann_v01_2' 
+from secret import *
 
 device = torch.accelerator.current_accelerator().type if torch.accelerator.is_available() else "cpu"
 print(f"Using {device} device")
@@ -33,6 +32,8 @@ class NeuralNetwork(nn.Module):
                 self.neural_stack=nn.Sequential(
                         nn.Linear(8575, 2048),
                         nn.LeakyReLU(),
+                        # nn.Linear(4096, 2048),
+                        # nn.LeakyReLU(),
                         nn.Linear(2048, 1024),
                         nn.LeakyReLU(),
                         nn.Linear(1024, 512),
@@ -50,7 +51,6 @@ class NeuralNetwork(nn.Module):
                         nn.Linear(5,1),
                         nn.Sigmoid() 
                 )
-                #TODO: implement conversion to float32
                 self.double()
         def forward(self, features):
                 prediction = self.neural_stack(features)

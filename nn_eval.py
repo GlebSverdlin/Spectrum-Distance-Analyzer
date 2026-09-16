@@ -17,6 +17,12 @@ long_option = ["model"]
 
 args, vals = getopt.getopt(args,option, long_option)
 
+date = str(datetime.datetime.now().strftime("%Y-%b-%d-%H-%M-%S"))
+data_name = str(name+"_"+date)
+log_path = str(eval_logging)+str(data_name)+'-test_date-'+date
+os.mkdir(log_path)
+
+
 try:
     for arg, val in args:
         if arg in ("-m", "--model"):
@@ -27,10 +33,6 @@ try:
 except: print(str(getopt.error))
 
 
-date = str(datetime.datetime.now().strftime("%Y-%b-%d-%H-%M-%S"))
-data_name = str(name+"_"+date)
-log_path = str(eval_logging)+str(data_name)
-os.mkdir(log_path)
 
 eval_data = SpectralDataset('aspcap', 'eval')
 
@@ -73,7 +75,7 @@ plt.plot(np.linspace(0, len(answers), num = len(answers)), corrects, '_')
 plt.scatter(np.linspace(0, len(answers), num = len(answers)), answers, c = errors, cmap = 'plasma', marker='x')
 plt.colorbar()
 plt.legend(['Average: '+str(average)])
-
+plt.savefig(f"{log_path}/fig.pdf")
 text = []
 
 for i in range(len(answers)):
@@ -86,7 +88,6 @@ with open(f"{log_path}/log.txt", 'x') as file:
     file.write(f'{str(text)}')
 plt.show()
 
-plt.savefig(f"{log_path}/fig.pdf")
 
 
 

@@ -56,9 +56,10 @@ with open(f"{log_path}/log.txt",'x') as file:
     plt.plot(np.linspace(0, len(tr), num = len(tr)), tr_filter, color = 'r')
     plt.plot(1,1,color='w')
     plt.legend([str("Max: " + str(max)+'; Idx: '+str(max_idx)), str('Min: ' + str(min)+'; Idx: '+str(min_idx)),str('Avrg: '+ str(avrg))])
+    plt.savefig(f"{log_path}/{data_name}.pdf")
     plt.show()
 
-    plt.savefig(f"{log_path}/{data_name}.pdf")
+
 print('ПРОВЕРИТЬ ОБНОВЛЕНИЕ ДАННЫХ ЛОГГИРОВАНИЯ')
 
 eval_network(eval_dl, network, loss_fn)
