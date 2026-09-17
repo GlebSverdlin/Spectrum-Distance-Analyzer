@@ -70,6 +70,7 @@ average = np.average(errors)
 
 print(f'Average error: {average}')
 
+plt.figure(figsize=(25,10))
 plt.style.use('bmh')
 plt.plot(np.linspace(0, len(answers), num = len(answers)), corrects, '_')
 plt.scatter(np.linspace(0, len(answers), num = len(answers)), answers, c = errors, cmap = 'plasma', marker='x')
