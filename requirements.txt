@@ -1,13 +1,5 @@
-os
-pandas
-numpy
-logging
-torch
-random
-scipy
-matplotlib
-datatime
-sys
-getopt
-time
+pandas == 3.0.3
+numpy == 2.5.2
+scipy == 1.18.0
+matplotlib == 3.11.1
 
