@@ -7,3 +7,4 @@ parser_protoype.ipynb
 dataset
 secret.py
 models/*
+__pycache__
