@@ -30,10 +30,10 @@ class NeuralNetwork(nn.Module):
         def __init__(self):
                 super().__init__()
                 self.neural_stack=nn.Sequential(
-                        nn.Linear(8575, 2048),
+                        nn.Linear(8575, 4096),
                         nn.LeakyReLU(),
-                        # nn.Linear(4096, 2048),
-                        # nn.LeakyReLU(),
+                        nn.Linear(4096, 2048),
+                        nn.LeakyReLU(),
                         nn.Linear(2048, 1024),
                         nn.LeakyReLU(),
                         nn.Linear(1024, 512),
