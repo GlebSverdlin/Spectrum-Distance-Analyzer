@@ -8,7 +8,7 @@ comment = input()
 
 network = start_network()
 
-optimizer, loss_fn, epochs, train_dl, eval_dl = init_parameters(network, 1e-5, 30, 1000)
+optimizer, loss_fn, epochs, train_dl, eval_dl = init_parameters(network, 1e-5, 30, 2000)
 
 #ВОТ ЭТО МЕНЯТЬ ВРУЧНУЮ КАЖДЫЙ ЗАПУСК!!!
 print('ПРОВЕРИТЬ ОБНОВЛЕНИЕ ДАННЫХ ЛОГГИРОВАНИЯ')
