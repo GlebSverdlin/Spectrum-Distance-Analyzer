@@ -11,7 +11,7 @@ print(f"Using {device} device")
 
 network = start_network(device)
 
-optimizer, loss_fn, epochs, train_dl, eval_dl = init_parameters(network, 1e-5, 15, 200)
+optimizer, loss_fn, epochs, train_dl, eval_dl = init_parameters(network, 1e-5, 120, 200)
 
 #ВОТ ЭТО МЕНЯТЬ ВРУЧНУЮ КАЖДЫЙ ЗАПУСК!!!
 print('ПРОВЕРИТЬ ОБНОВЛЕНИЕ ДАННЫХ ЛОГГИРОВАНИЯ')
@@ -67,7 +67,7 @@ with open(f"{log_path}/log.txt",'x') as file:
 
 print('ПРОВЕРИТЬ ОБНОВЛЕНИЕ ДАННЫХ ЛОГГИРОВАНИЯ')
 
-eval_network(eval_dl, network, loss_fn)
+# eval_network(eval_dl, network, loss_fn)
 
 print('ПРОВЕРИТЬ ОБНОВЛЕНИЕ ДАННЫХ ЛОГГИРОВАНИЯ')
 
