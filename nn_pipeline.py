@@ -6,9 +6,12 @@ from scipy.signal import savgol_filter
 print("Comment:")
 comment = input()
 
-network = start_network()
+device = torch.accelerator.current_accelerator().type if torch.accelerator.is_available() else "cpu"
+print(f"Using {device} device")
 
-optimizer, loss_fn, epochs, train_dl, eval_dl = init_parameters(network, 1e-5, 30, 2000)
+network = start_network(device)
+
+optimizer, loss_fn, epochs, train_dl, eval_dl = init_parameters(network, 1e-5, 120, 200)
 
 #ВОТ ЭТО МЕНЯТЬ ВРУЧНУЮ КАЖДЫЙ ЗАПУСК!!!
 print('ПРОВЕРИТЬ ОБНОВЛЕНИЕ ДАННЫХ ЛОГГИРОВАНИЯ')
@@ -20,7 +23,7 @@ os.mkdir(log_path)
 
 print(f"Run:{run}, model: {network}, logging to {log_path}.")
 
-tr, itr, model = train_network(train_dl, network, loss_fn, optimizer, epochs)
+tr, itr, model, times = train_network(train_dl, network, loss_fn, optimizer, epochs, device)
 
 
 torch.save(model.state_dict(), PATH+name+run+date)
@@ -34,6 +37,8 @@ with open(f"{log_path}/log.txt",'x') as file:
     file.write(str(optimizer))
     file.write("\n================LOSS FUNC================\n")
     file.write(str(loss_fn))
+    file.write("\n=================TIMES=================\n")
+    file.write(str(times))
     file.write("\n================LOSSES================\n")
     iterations = []
     for i in range(len(tr)):

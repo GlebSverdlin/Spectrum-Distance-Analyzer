@@ -7,12 +7,11 @@ from dataloader import *
 import matplotlib.pyplot as plt
 import numpy as np 
 from secret import *
-
-device = torch.accelerator.current_accelerator().type if torch.accelerator.is_available() else "cpu"
-print(f"Using {device} device")
+import time
 
 train_data = SpectralDataset('aspcap', 'train')
 eval_data = SpectralDataset('aspcap', 'eval')
+
 '''
 n=126
 plt.figure(figsize=(23,5))
@@ -70,10 +69,10 @@ def print_weights(model, msg):
             "max =", p.data.abs().max().item(),
         )
 
-def start_network():
+def start_network(device):
         network = NeuralNetwork()
-        network.apply(init_weights)
         network.to(device)
+        network.apply(init_weights)
         print('Network:')
         print(network)
         return network
@@ -88,6 +87,7 @@ def init_parameters(model, learn_rate, batch, epochs):
 
         print(f"Optimizer: {optimizer}")
         print(f"Loss function: {loss}")
+        print(f"Batch size: {batch}")
         print("Loaders:")
         print(train_dataloader, len(train_dataloader))
         print(eval_dataloader)
@@ -96,31 +96,44 @@ def init_parameters(model, learn_rate, batch, epochs):
         return optimizer, loss, epochs, train_dataloader, eval_dataloader
 
 
-def train_network(loader, model, loss_fn, optimizer, epochs):
+def train_network(loader, model, loss_fn, optimizer, epochs, device):
         losses = []
         iters = []
+        times = []
         step_num = 0
         for epoch in range(epochs):
-                size = len(loader.dataset)
+                # size = len(loader.dataset)
                 model.train()
-                for iter, (features, label) in enumerate(loader,0):
+                train_epoch_start = time.perf_counter()
+                print (f"Loaders num: {len(loader)}\n")
+                for iter, (features, label) in enumerate(loader, start = 0):
+                        # print(f"Iter: {iter}\n Features: {features}\n Label: {label}\n\n")
+                        train_step_start = time.perf_counter()
                         batch = len(label)
-                        prediction = model(features)
-                        loss = loss_fn(prediction, label)
+                        prediction = model(features.to(device))
+                        loss = loss_fn(prediction, label.to(device))
 
                         loss.backward()
                         optimizer.step() 
                         optimizer.zero_grad()
+                        train_step_end = time.perf_counter()
+                        train_step_dur = train_step_end - train_step_start
                         
-                                                                  
-                        if iter % 100 == 0:
+                        # print (f"\tIter {iter}\n\n")
+
+                        if (iter % 100) == 0:
+                            end = time.time()
                             step_num+=1
                             loss = loss.item()
                             print(f"iteration: {step_num}")
                             print(f"loss: {loss:>7f}")
+                            print(f"Duration step {iter}: {train_step_dur}")
                             losses.append(loss)
                             iters.append(step_num)
-        return losses, iters, model
+                            times.append(train_step_dur)
+                train_epoch_end = time.perf_counter()
+                print(f"Epoch {epoch} duration {train_epoch_end - train_epoch_start} last iter {iter}")
+        return losses, iters, model, times
 
                                        
 def eval_network(loader, model, loss_fn):
