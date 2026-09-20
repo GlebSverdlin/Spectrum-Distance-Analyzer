@@ -121,16 +121,16 @@ def train_network(loader, model, loss_fn, optimizer, epochs, device):
                         
                         # print (f"\tIter {iter}\n\n")
 
-                        if (iter % 100) == 0:
-                            end = time.time()
-                            step_num+=1
-                            loss = loss.item()
-                            print(f"iteration: {step_num}")
-                            print(f"loss: {loss:>7f}")
-                            print(f"Duration step {iter}: {train_step_dur}")
-                            losses.append(loss)
-                            iters.append(step_num)
-                            times.append(train_step_dur)
+
+                end = time.time()
+                step_num+=1
+                loss = loss.item()
+                print(f"iteration: {step_num}")
+                print(f"loss: {loss:>7f}")
+                print(f"Duration step {iter}: {train_step_dur}")
+                losses.append(loss)
+                iters.append(step_num)
+                times.append(train_step_dur)
                 train_epoch_end = time.perf_counter()
                 print(f"Epoch {epoch} duration {train_epoch_end - train_epoch_start} last iter {iter}")
         return losses, iters, model, times
