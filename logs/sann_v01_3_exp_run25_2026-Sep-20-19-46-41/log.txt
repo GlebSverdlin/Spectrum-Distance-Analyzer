@@ -1,0 +1,48 @@
+COMMENT:
+test_run_19
+=================MODEL=================
+NeuralNetwork(
+  (neural_stack): Sequential(
+    (0): Linear(in_features=8575, out_features=4096, bias=True)
+    (1): LeakyReLU(negative_slope=0.01)
+    (2): Linear(in_features=4096, out_features=2048, bias=True)
+    (3): LeakyReLU(negative_slope=0.01)
+    (4): Linear(in_features=2048, out_features=1024, bias=True)
+    (5): LeakyReLU(negative_slope=0.01)
+    (6): Linear(in_features=1024, out_features=512, bias=True)
+    (7): LeakyReLU(negative_slope=0.01)
+    (8): Linear(in_features=512, out_features=256, bias=True)
+    (9): LeakyReLU(negative_slope=0.01)
+    (10): Linear(in_features=256, out_features=128, bias=True)
+    (11): LeakyReLU(negative_slope=0.01)
+    (12): Linear(in_features=128, out_features=50, bias=True)
+    (13): LeakyReLU(negative_slope=0.01)
+    (14): Linear(in_features=50, out_features=30, bias=True)
+    (15): LeakyReLU(negative_slope=0.01)
+    (16): Linear(in_features=30, out_features=5, bias=True)
+    (17): LeakyReLU(negative_slope=0.01)
+    (18): Linear(in_features=5, out_features=1, bias=True)
+    (19): Sigmoid()
+  )
+)
+================OPTIMIZER================
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    decoupled_weight_decay: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 1e-05
+    maximize: False
+    weight_decay: 0
+)
+================LOSS FUNC================
+BCELoss()
+=================TIMES=================
+[0.3094618579998496, 0.3113827890010725, 0.30989188500097953, 0.3107870100029686, 0.311320937002165]
+================LOSSES================
+[1, 0.7015173519207091, 2, 0.7158384079239429, 3, 0.7118516967333689, 4, 0.6647790499270652, 5, 0.6913482093498634]
