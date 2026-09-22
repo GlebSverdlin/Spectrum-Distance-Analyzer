@@ -11,7 +11,7 @@ print(f"Using {device} device")
 
 network = start_network(device)
 
-optimizer, loss_fn, epochs, train_dl, eval_dl = init_parameters(network, 1e-5, 120, 200)
+optimizer, loss_fn, epochs, train_dl, eval_dl = init_parameters(network, 1e-5, 120, 5)
 
 #ВОТ ЭТО МЕНЯТЬ ВРУЧНУЮ КАЖДЫЙ ЗАПУСК!!!
 print('ПРОВЕРИТЬ ОБНОВЛЕНИЕ ДАННЫХ ЛОГГИРОВАНИЯ')
