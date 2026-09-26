@@ -11,6 +11,7 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 import shap
+import random
 
 args = sys.argv[1:]
 option = "m:"
@@ -44,6 +45,10 @@ eval_dataloader = DataLoader(eval_data, batch_size=len(eval_data), shuffle=False
 model.eval()
 
 for iter, batch in enumerate(eval_dataloader):
+
+    random.shuffle(batch)
+
+
     background_data = batch[0][:len(eval_data)-100]
     test_data = batch[0][len(eval_data)-100:]
     explainer = shap.DeepExplainer(model, background_data)
@@ -65,12 +70,12 @@ for iter, batch in enumerate(eval_dataloader):
     plt.style.use('bmh')
     plt.scatter(np.linspace(0, len(average_values), num = len(average_values)), average_values, c = c, cmap = 'plasma', marker = 'x')
     plt.colorbar()
-    plt.savefig(f"{log_path}/fig.pdf")
+    # plt.savefig(f"{log_path}/fig.pdf")
     plt.show()
     break
 
-with open(f"{log_path}/log.txt", 'x') as file:
-    file.write(f'Model: {model_name}\n')
-    file.write(f'Average predicted effect of each feature\n')
-    file.write(str(average_values))
+# with open(f"{log_path}/log.txt", 'x') as file:
+#     file.write(f'Model: {model_name}\n')
+#     file.write(f'Average predicted effect of each feature\n')
+#     file.write(str(average_values))
 
