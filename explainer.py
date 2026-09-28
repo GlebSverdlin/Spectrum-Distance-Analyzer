@@ -6,7 +6,7 @@ from secret import *
 from torch.utils.data import DataLoader
 import sys
 import getopt
-from network import NeuralNetwork
+from network_ext import NeuralNetwork
 import time
 import matplotlib.pyplot as plt
 import numpy as np
@@ -33,24 +33,24 @@ print(f"Using {device} device")
 
 eval_data = SpectralDataset('aspcap', 'eval')
 
-model = NeuralNetwork()
-model.load_state_dict(torch.load(path, weights_only = True))
+model = NeuralNetwork().to(device)
+model.load_state_dict(torch.load(path, weights_only = True, map_location=torch.device('cpu')))
 
 date = str(datetime.datetime.now().strftime("%Y-%b-%d-%H-%M-%S"))
 data_name = str(name+"_"+date)
 
 log_path = os.path.join(logs_shap, str(data_name+'-test_date-'+date))
-os.mkdir(log_path)
-eval_dataloader = DataLoader(eval_data, batch_size=len(eval_data), shuffle=False)
+os.mkdir(log_path) 
+eval_dataloader = DataLoader(eval_data, batch_size=len(eval_data), shuffle=True)
 model.eval()
 
 for iter, batch in enumerate(eval_dataloader):
 
     random.shuffle(batch)
 
-
     background_data = batch[0][:len(eval_data)-100]
     test_data = batch[0][len(eval_data)-100:]
+    print(np.shape(background_data))
     explainer = shap.DeepExplainer(model, background_data)
     shap_vals = explainer.shap_values(test_data)
     
@@ -62,13 +62,23 @@ for iter, batch in enumerate(eval_dataloader):
             line_unav.append(line[value])
         average_values.append(np.average(line_unav).tolist())
 
+    std_dev = np.std(average_values)
+
+    for line in average_values:
+        if line > -3*std_dev:
+            if line < 3*std_dev:
+                line = 0.0
+
     c = []
     for i in average_values:
         c.append(0+i)
 
+
     plt.figure(figsize=(25,10))
     plt.style.use('bmh')
     plt.scatter(np.linspace(0, len(average_values), num = len(average_values)), average_values, c = c, cmap = 'plasma', marker = 'x')
+    plt.plot(np.linspace(0, len(average_values), num = len(average_values)), np.full(shape = len(average_values), fill_value= 3*std_dev), color = 'lime')
+    plt.plot(np.linspace(0, len(average_values), num = len(average_values)), np.full(shape = len(average_values), fill_value= -3*std_dev), color = 'lime')
     plt.colorbar()
     # plt.savefig(f"{log_path}/fig.pdf")
     plt.show()
