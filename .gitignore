@@ -8,3 +8,4 @@ dataset
 secret.py
 models/*
 __pycache__
+external/*
