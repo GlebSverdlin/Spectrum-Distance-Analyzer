@@ -34,7 +34,7 @@ class SpectralDataset(Dataset):
             item_label_col = pd.read_csv(item_path, usecols=["planet"], index_col=False)
 
             item_label = item_label_col.head(1)
-            item_data = item_data_col.to_numpy(dtype=np.double, na_value=0.0)
+            item_data = item_data_col.head(7514).to_numpy(dtype=np.double, na_value=0.0)
 
             labels.append(item_label)
             
