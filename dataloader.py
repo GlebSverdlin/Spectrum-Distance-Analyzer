@@ -19,11 +19,12 @@ class SpectralDataset(Dataset):
                 self.data_dir = dataset_ap
             case "aspcap":
                 self.data_dir = dataset_aspcap
+            case "aspcap_nz":
+                self.data_dir = dataset_aspcap_nz
         self.spectra = []
         self.dataset_list = []
         labels = []
-       
-        self.tables = os.scandir(self.data_dir)
+        self.tables = os.scandir(self.data_dir)          
 
         for item in self.tables:
             self.spectra.append(item.name)
@@ -35,36 +36,16 @@ class SpectralDataset(Dataset):
             item_label = item_label_col.head(1)
             item_data = item_data_col.to_numpy(dtype=np.double, na_value=0.0)
 
-            labels.append(item_label)#pd.read_csv(self.data_dir+i.name, usecols=["planet"], index_col=False))
+            labels.append(item_label)
             
             data = np.asarray(item_data).flatten()
             label = item_label.to_numpy(dtype=np.double)
 
-            label = np.asarray(label[0]).flatten()      
-
-            # for seq in zeroes:
-            #     start = seq[0]
-            #     while start < seq[1]:
-            #         data=np.delete(data,start)
-            #         start+=1
-            #         print(np.shape(data))
+            label = np.asarray(label[0]).flatten()
 
             self.dataset_list.append({'data':data, 'label':label})
 
-        # self.spec_max = 0
-        # self.spec_min = 10
-        #
-        # for self.item in self.tables:
-        #     data = pd.read_csv(self.item, usecols=["flux"], index_col=False)
-        #
-        #     local_max = np.nanmax(data)
-        #     local_min = np.nanmin(data)
-        #
-        #     if self.spec_max < local_max:
-        #         self.spec_max = local_max
-        #     if self.spec_min > local_min:
-        #         self.spec_min = local_min
-        #
+
         train_length = 1600
 
         positives = []
@@ -104,13 +85,7 @@ class SpectralDataset(Dataset):
         # return len(self.spectra)
         return len(self.spectra)
 
-    # def rescale_spectrum(self, flux, max, min):
-    #     self.zeroes = [i for i in range(0, len(flux)) if flux[i] == 0.0]
-    #     flux_resc = []
-    #     for i in flux:
-    #         flux_resc.append((i - min) * 10 / (max - min))
-    #     return flux_resc
-    #
+
 
     def __getitem__(self, idx):
         time_start = time.perf_counter()

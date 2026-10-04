@@ -31,7 +31,7 @@ except: print(str(getopt.error))
 device = torch.accelerator.current_accelerator().type if torch.accelerator.is_available() else "cpu"
 print(f"Using {device} device")
 
-eval_data = SpectralDataset('aspcap', 'eval')
+eval_data = SpectralDataset('aspcap_nz', 'eval')
 
 model = NeuralNetwork().to(device)
 model.load_state_dict(torch.load(path, weights_only = True, map_location=torch.device('cpu')))
@@ -89,12 +89,12 @@ for iter, batch in enumerate(eval_dataloader):
     plt.plot(np.linspace(0, len(average_values), num = len(average_values)), np.full(shape = len(average_values), fill_value= 3*std_dev), color = 'lime')
     plt.plot(np.linspace(0, len(average_values), num = len(average_values)), np.full(shape = len(average_values), fill_value= -3*std_dev), color = 'lime')
     plt.colorbar()
-    plt.savefig(f"{log_path}/fig.pdf")
+    # plt.savefig(f"{log_path}/fig.pdf")
     plt.show()
     break
 
-with open(f"{log_path}/log.txt", 'x') as file:
-    file.write(f'Model: {model_name}\n')
-    file.write(f'Average predicted effect of each feature\n')
-    file.write(str(average_values))
+# with open(f"{log_path}/log.txt", 'x') as file:
+#     file.write(f'Model: {model_name}\n')
+#     file.write(f'Average predicted effect of each feature\n')
+#     file.write(str(average_values))
 

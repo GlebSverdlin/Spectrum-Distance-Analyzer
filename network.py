@@ -9,8 +9,8 @@ import numpy as np
 from secret import *
 import time
 
-train_data = SpectralDataset('aspcap', 'train')
-eval_data = SpectralDataset('aspcap', 'eval')
+train_data = SpectralDataset('aspcap_nz', 'train')
+eval_data = SpectralDataset('aspcap_nz', 'eval')
 
 '''
 n=126
