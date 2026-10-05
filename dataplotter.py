@@ -2,6 +2,9 @@ from scipy.signal import savgol_filter
 import numpy as np
 import matplotlib.pyplot as plt
 import numpy as np
+import sys
+import getopt
+import json
 
 def plot_losses(losses, save):
     tr = []
@@ -43,5 +46,41 @@ def plot_eval(data):
 
     plt.show()
 
+def plot_from_json(path):
+    with open(path, 'r') as file:
+        data = json.load(file)
+
+    losses = data['losses']
+
+    max = np.max(losses)
+    min = np.min(losses)
+    avrg = np.average(losses)
+    max_idx = losses.index(max)
+    min_idx = losses.index(min)
+    median = np.median(losses)
+        
+    fig, ax = plt.subplots(ncols=1, nrows=1, figsize=(15,7))
+
+    losses_filter = savgol_filter(losses, window_length = int(len(losses)/10), polyorder = 3)
+    #, ['max', 'max_idx', 'min', 'min_idx', 'average'])
+    plt.plot(np.linspace(0, len(losses), num = len(losses)), losses)
+    plt.plot(np.linspace(0, len(losses), num = len(losses)), losses_filter, color = 'r')
+    plt.plot(1,1,color='w')
+    plt.plot(1,1,color='w')
+    plt.legend([str("Max: " + str(max)+'; Idx: '+str(max_idx)), str('Min: ' + str(min)+'; Idx: '+str(min_idx)),str('Avrg: '+ str(avrg)), str('Mdn: '+str(median))])
+    plt.show()
 
 
+args = sys.argv[1:]
+option = "m:"
+long_option = ["model"]
+
+args, vals = getopt.getopt(args,option, long_option)
+
+try:
+    for arg, val in args:
+        if arg in ("-m", "--model"):
+            json_path = sys.argv[2]
+
+except: print("ERR")
+plot_from_json(json_path)
