@@ -29,26 +29,52 @@ class NeuralNetwork(nn.Module):
         def __init__(self):
                 super().__init__()
                 self.neural_stack=nn.Sequential(
-                        nn.Linear(7514, 2048),
+                        # nn.Linear(7514, 2048),
                         # nn.LeakyReLU(),
                         # nn.Linear(4096, 2048),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(2048, 1024),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(1024, 512),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(512, 256),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(256, 128),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(128, 50),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(50,30),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(30, 5),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(5,1),
+                        # nn.Sigmoid()
+                                
+                        nn.Linear(7514, 1072),
                         nn.LeakyReLU(),
-                        nn.Linear(2048, 1024),
+                        nn.Linear(1072, 1072),
                         nn.LeakyReLU(),
-                        nn.Linear(1024, 512),
+                        nn.Linear(1072, 1072),
                         nn.LeakyReLU(),
-                        nn.Linear(512, 256),
+                        nn.Linear(1072, 1072),
                         nn.LeakyReLU(),
-                        nn.Linear(256, 128),
+                        nn.Linear(1072, 1072),
                         nn.LeakyReLU(),
-                        nn.Linear(128, 50),
+                        nn.Linear(1072, 1072),
                         nn.LeakyReLU(),
-                        nn.Linear(50,30),
+                        nn.Linear(1072, 268),
                         nn.LeakyReLU(),
-                        nn.Linear(30, 5),
+                        nn.Linear(268, 268),
                         nn.LeakyReLU(),
-                        nn.Linear(5,1),
+                        nn.Linear(268,67),
+                        nn.LeakyReLU(),
+                        nn.Linear(67, 24),
+                        nn.LeakyReLU(),
+                        nn.Linear(24,1),
                         nn.Sigmoid() 
+
+
+
                 )
                 self.double()
         def forward(self, features):
@@ -77,7 +103,7 @@ def start_network(device):
         print(network)
         return network
 
-def init_parameters(model, learn_rate, batch, epochs):
+def init_parameters(model, learn_rate, batch, epochs, threshold, patience, patience_bool):
         optimizer = optim.Adam(model.parameters(), lr = learn_rate)
         # optimizer = optim.SGD(model.parameters(), lr = learn_rate)
         # optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
@@ -93,19 +119,23 @@ def init_parameters(model, learn_rate, batch, epochs):
         print(eval_dataloader)
         print(f"Epochs: {epochs}")
 
-        return optimizer, loss, epochs, train_dataloader, eval_dataloader
+        return optimizer, loss, epochs, train_dataloader, eval_dataloader, threshold, patience, patience_bool
 
 
-def train_network(loader, model, loss_fn, optimizer, epochs, device):
+def train_network(loader, model, loss_fn, optimizer, epochs, device, threshold, model_save_path, patience, patience_bool, output_freq):
         losses = []
         iters = []
         times = []
         step_num = 0
+        patience_on = patience_bool
+        threshold_passed = False
+        dynamic = os.path.join(model_save_path, 'dynamic')
+        os.mkdir(dynamic)
+        dyn_counter = 0
         for epoch in range(epochs):
                 # size = len(loader.dataset)
                 model.train()
                 train_epoch_start = time.perf_counter()
-                print (f"Loaders num: {len(loader)}\n")
                 for iter, (features, label) in enumerate(loader, start = 0):
                         # print(f"Iter: {iter}\n Features: {features}\n Label: {label}\n\n")
                         train_step_start = time.perf_counter()
@@ -117,22 +147,44 @@ def train_network(loader, model, loss_fn, optimizer, epochs, device):
                         optimizer.step() 
                         optimizer.zero_grad()
                         train_step_end = time.perf_counter()
-                        train_step_dur = train_step_end - train_step_start
-                        
+                        train_step_dur = train_step_end - train_step_start                        
                         # print (f"\tIter {iter}\n\n")
 
 
                 end = time.time()
                 step_num+=1
                 loss = loss.item()
-                print(f"iteration: {step_num}")
-                print(f"loss: {loss:>7f}")
-                print(f"Duration step {iter}: {train_step_dur}")
                 losses.append(loss)
                 iters.append(step_num)
-                times.append(train_step_dur)
+                times.append(train_step_dur) 
+
+                if loss<threshold:
+                        dyn_counter+=1
+                        folder = os.scandir(dynamic)
+                        for item in folder:
+                                os.remove(os.path.join(dynamic, item.name))
+                        torch.save(model.state_dict(), dynamic+'/'+f'dynamic_{dyn_counter}')
+                        threshold = loss
+                        threshold_passed = True
+                else:
+                        if patience_on and threshold_passed:
+                            patience-=1
+
+                if patience == 0:
+                        print(f"=========Training ended due to patience 0=========")
+                        break
+
                 train_epoch_end = time.perf_counter()
-                print(f"Epoch {epoch} duration {train_epoch_end - train_epoch_start} last iter {iter}")
+                if epoch%output_freq == 0:
+                        print(f"iteration: {step_num}")
+                        print(f"loss: {loss:>7f}")
+                        print (f"Loaders num: {len(loader)}\n")
+                        print(f"Duration step {iter}: {train_step_dur}")
+                        print(f"Epoch {epoch} duration {train_epoch_end - train_epoch_start} last iter {iter}")
+                        print(f"ETA: {(train_epoch_end - train_epoch_start)*(epochs - epoch)} s")
+
+
+
         return losses, iters, model, times
 
                                        
