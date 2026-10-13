@@ -8,8 +8,8 @@ import sys
 import getopt
 # print("Comment:")
 # comment = input()
-output_freq = 1
 args = sys.argv[1:]
+output_freq = 1
 option = "r:"
 long_option = ["reduced"]
 
