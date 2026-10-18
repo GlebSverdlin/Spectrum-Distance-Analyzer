@@ -29,10 +29,11 @@ class NeuralNetwork(nn.Module):
         def __init__(self):
                 super().__init__()
                 self.neural_stack=nn.Sequential(
+            #=======MODEL_1========
                         # nn.Linear(7514, 2048),
                         # nn.LeakyReLU(),
-                        # nn.Linear(4096, 2048),
-                        # nn.LeakyReLU(),
+                        # # nn.Linear(4096, 2048),
+                        # # nn.LeakyReLU(),
                         # nn.Linear(2048, 1024),
                         # nn.LeakyReLU(),
                         # nn.Linear(1024, 512),
@@ -49,30 +50,84 @@ class NeuralNetwork(nn.Module):
                         # nn.LeakyReLU(),
                         # nn.Linear(5,1),
                         # nn.Sigmoid()
-                                
-                        nn.Linear(7514, 1072),
-                        nn.LeakyReLU(),
-                        nn.Linear(1072, 1072),
-                        nn.LeakyReLU(),
-                        nn.Linear(1072, 1072),
-                        nn.LeakyReLU(),
-                        nn.Linear(1072, 1072),
-                        nn.LeakyReLU(),
-                        nn.Linear(1072, 1072),
-                        nn.LeakyReLU(),
-                        nn.Linear(1072, 1072),
-                        nn.LeakyReLU(),
-                        nn.Linear(1072, 268),
-                        nn.LeakyReLU(),
-                        nn.Linear(268, 268),
-                        nn.LeakyReLU(),
-                        nn.Linear(268,67),
-                        nn.LeakyReLU(),
-                        nn.Linear(67, 24),
-                        nn.LeakyReLU(),
-                        nn.Linear(24,1),
-                        nn.Sigmoid() 
+                        #
+            #=======MODEL_2========
+                        # nn.Linear(7514, 1072),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(1072, 1072),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(1072, 1072),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(1072, 1072),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(1072, 1072),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(1072, 1072),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(1072, 268),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(268, 268),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(268,67),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(67, 24),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(24,1),
+                        # nn.Sigmoid() 
 
+            #=======MODEL_3========
+                        # nn.Linear(7514, 7514),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(7514, 7514),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(7514, 7514),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(7514, 118),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(118,118),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(118,118),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(118,1),
+                        # nn.Sigmoid()
+
+            #=======MODEL_4========
+                        nn.Linear(7514, 2505),
+                        nn.LeakyReLU(),
+                        nn.Linear(2505,835),
+                        nn.LeakyReLU(),
+                        nn.Linear(835, 256),
+                        nn.LeakyReLU(),
+                        nn.Linear(256,256),
+                        nn.LeakyReLU(),
+                        nn.Linear(256,256),
+                        nn.LeakyReLU(),
+                        nn.Linear(256,256),
+                        nn.LeakyReLU(),
+                        nn.Linear(256,256),
+                        nn.LeakyReLU(),
+                        nn.Linear(256,256),
+                        nn.LeakyReLU(),
+                        nn.Linear(256,256),
+                        nn.LeakyReLU(),
+                        nn.Linear(256,256),
+                        nn.LeakyReLU(),
+                        nn.Linear(256,256),
+                        nn.LeakyReLU(),
+                        nn.Linear(256,256),
+                        nn.LeakyReLU(),
+                        nn.Linear(256,256),
+                        nn.LeakyReLU(),
+                        nn.Linear(256,128),
+                        nn.LeakyReLU(),
+                        nn.Linear(128,64),
+                        nn.LeakyReLU(),
+                        nn.Linear(64,32),
+                        nn.LeakyReLU(),
+                        nn.Linear(32,16),
+                        nn.LeakyReLU(),
+                        nn.Linear(16,1),
+                        nn.Sigmoid()
 
 
                 )
@@ -163,7 +218,7 @@ def train_network(loader, model, loss_fn, optimizer, epochs, device, threshold, 
                         folder = os.scandir(dynamic)
                         for item in folder:
                                 os.remove(os.path.join(dynamic, item.name))
-                        torch.save(model.state_dict(), dynamic+'/'+f'dynamic_{dyn_counter}')
+                        torch.save(model.state_dict(), dynamic+'/'+f'dynamic_{dyn_counter}_epoch{epoch}')
                         threshold = loss
                         threshold_passed = True
                 else:
