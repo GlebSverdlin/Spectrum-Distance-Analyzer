@@ -28,7 +28,7 @@ print(f"Using {device} device")
 
 network = start_network(device)
 
-optimizer, loss_fn, epochs, train_dl, eval_dl, threshold, patience, patience_bool = init_parameters(network, 1e-5, 1600, 100, 0.7, 3, True) #model, LR, batch, epochs, threshold, patience, patience_on
+optimizer, loss_fn, epochs, train_dl, eval_dl, threshold, patience, patience_bool = init_parameters(network, 1e-5, 30, 100, 0.3, 50, False) #model, LR, batch, epochs, threshold, patience, patience_on
 
 #ВОТ ЭТО МЕНЯТЬ ВРУЧНУЮ КАЖДЫЙ ЗАПУСК!!!
 print('ПРОВЕРИТЬ ОБНОВЛЕНИЕ ДАННЫХ ЛОГГИРОВАНИЯ')
