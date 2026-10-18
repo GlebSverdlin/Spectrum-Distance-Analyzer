@@ -11,6 +11,7 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 import shap
+import json
 
 args = sys.argv[1:]
 option = "m:"
@@ -79,16 +80,17 @@ plt.scatter(np.linspace(0, len(answers), num = len(answers)), answers, c = error
 plt.colorbar()
 plt.legend(['Average: '+str(average)])
 plt.savefig(f"{log_path}/fig.pdf")
-text = []
+
+cor = []
+ans = []
 
 for i in range(len(answers)):
-    text.append(corrects[i].item())
-    text.append(answers[i].item())
+    cor.append(corrects[i].item())
+    ans.append(answers[i].item())
 
-with open(f"{log_path}/log.txt", 'x') as file:
-    file.write(f'Tested model: {model_name}\n')
-    file.write(f'Answers:')
-    file.write(f'{str(text)}')
+with open(f"{log_path}/log.json", 'x') as file:
+    json.dump({"network" : model_name, "answers" : ans, "corrects" : cor}, file, indent = 4)
+
 plt.show()
 
 
