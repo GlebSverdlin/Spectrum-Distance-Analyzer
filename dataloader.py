@@ -46,7 +46,8 @@ class SpectralDataset(Dataset):
             self.dataset_list.append({'data':data, 'label':label})
 
 
-        train_length = 1600
+        train_length = 1400
+        test_length = 200
 
         positives = []
         negatives = []
@@ -63,7 +64,8 @@ class SpectralDataset(Dataset):
         # j = int(len(self.spectra) / 8)
         #
         self.train_plain = negatives[:int(train_length/2)] + positives[:int(train_length/2)]
-        self.eval = negatives[int(train_length/2):] + positives[int(train_length/2):]
+        self.eval = negatives[int(train_length/2)+int(test_length/2):] + positives[int(train_length/2)+int(test_length/2):]
+        self.test = negatives[int(train_length/2):int(train_length/2)+int(test_length/2)] + positives[int(train_length/2):int(train_length/2)+int(test_length/2)]
         # random.shuffle(self.train)
         self.train = []
         
@@ -77,6 +79,9 @@ class SpectralDataset(Dataset):
                 print(f"purpose:", purpose, ", length:", len(self.spectra))
             case "eval":
                 self.spectra = self.eval
+                print(f"purpose:", purpose, ", length:", len(self.spectra))
+            case "test":
+                self.spectra = self.test
                 print(f"purpose:", purpose, ", length:", len(self.spectra))
             case _:
                 raise ValueError("Wrong purpose train/eval")
