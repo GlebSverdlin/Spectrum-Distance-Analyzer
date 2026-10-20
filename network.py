@@ -11,20 +11,8 @@ import time
 
 train_data = SpectralDataset('aspcap_nz', 'train')
 eval_data = SpectralDataset('aspcap_nz', 'eval')
+test_data = SpectralDataset('aspcap_nz', 'test')
 
-'''
-n=126
-plt.figure(figsize=(23,5))
-
-train_data_length = len(train_data[1][0])
-print (f'train_data_length: {train_data_length}')
-print (f'eval_data[n]: {eval_data[n]}')
-
-print(eval_data[n][0])
-
-plt.plot(np.linspace(0, train_data_length, num = train_data_length), eval_data[n][0])
-plt.show()
-'''
 class NeuralNetwork(nn.Module):
         def __init__(self):
                 super().__init__()
@@ -76,58 +64,58 @@ class NeuralNetwork(nn.Module):
                         # nn.Sigmoid() 
 
             #=======MODEL_3========
-                        # nn.Linear(7514, 7514),
-                        # nn.LeakyReLU(),
-                        # nn.Linear(7514, 7514),
-                        # nn.LeakyReLU(),
-                        # nn.Linear(7514, 7514),
-                        # nn.LeakyReLU(),
-                        # nn.Linear(7514, 118),
-                        # nn.LeakyReLU(),
-                        # nn.Linear(118,118),
-                        # nn.LeakyReLU(),
-                        # nn.Linear(118,118),
-                        # nn.LeakyReLU(),
-                        # nn.Linear(118,1),
-                        # nn.Sigmoid()
+                        nn.Linear(7514, 500),
+                        nn.LeakyReLU(),
+                        nn.Linear(500, 300),
+                        nn.LeakyReLU(),
+                        nn.Linear(300, 200),
+                        nn.LeakyReLU(),
+                        nn.Linear(200, 100),
+                        nn.LeakyReLU(),
+                        nn.Linear(100,50),
+                        nn.LeakyReLU(),
+                        nn.Linear(50,25),
+                        nn.LeakyReLU(),
+                        nn.Linear(25,1),
+                        nn.Sigmoid()
 
             #=======MODEL_4========
-                        nn.Linear(7514, 2505),
-                        nn.LeakyReLU(),
-                        nn.Linear(2505,835),
-                        nn.LeakyReLU(),
-                        nn.Linear(835, 256),
-                        nn.LeakyReLU(),
-                        nn.Linear(256,256),
-                        nn.LeakyReLU(),
-                        nn.Linear(256,256),
-                        nn.LeakyReLU(),
-                        nn.Linear(256,256),
-                        nn.LeakyReLU(),
-                        nn.Linear(256,256),
-                        nn.LeakyReLU(),
-                        nn.Linear(256,256),
-                        nn.LeakyReLU(),
-                        nn.Linear(256,256),
-                        nn.LeakyReLU(),
-                        nn.Linear(256,256),
-                        nn.LeakyReLU(),
-                        nn.Linear(256,256),
-                        nn.LeakyReLU(),
-                        nn.Linear(256,256),
-                        nn.LeakyReLU(),
-                        nn.Linear(256,256),
-                        nn.LeakyReLU(),
-                        nn.Linear(256,128),
-                        nn.LeakyReLU(),
-                        nn.Linear(128,64),
-                        nn.LeakyReLU(),
-                        nn.Linear(64,32),
-                        nn.LeakyReLU(),
-                        nn.Linear(32,16),
-                        nn.LeakyReLU(),
-                        nn.Linear(16,1),
-                        nn.Sigmoid()
+                        # nn.Linear(7514, 256),
+                        # # nn.LeakyReLU(),
+                        # # nn.Linear(2505,835),
+                        # # nn.LeakyReLU(),
+                        # # nn.Linear(835, 256),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(256,256),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(256,256),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(256,256),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(256,256),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(256,256),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(256,256),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(256,256),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(256,256),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(256,256),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(256,256),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(256,128),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(128,64),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(64,32),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(32,16),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(16,1),
+                        # nn.Sigmoid()
 
 
                 )
@@ -164,21 +152,23 @@ def init_parameters(model, learn_rate, batch, epochs, threshold, patience, patie
         # optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
         loss = nn.BCELoss()
         train_dataloader = DataLoader(train_data, batch_size=batch, shuffle = True)
-        eval_dataloader = DataLoader(eval_data, batch_size=len(eval_data), shuffle=False)
+        eval_dataloader = DataLoader(eval_data, batch_size=len(eval_data), shuffle = False)
+        test_dataloader = DataLoader(test_data, batch_size=batch, shuffle = False)
 
         print(f"Optimizer: {optimizer}")
         print(f"Loss function: {loss}")
         print(f"Batch size: {batch}")
-        print("Loaders:")
+        print("Loaders:") 
         print(train_dataloader, len(train_dataloader))
         print(eval_dataloader)
         print(f"Epochs: {epochs}")
 
-        return optimizer, loss, epochs, train_dataloader, eval_dataloader, threshold, patience, patience_bool
+        return optimizer, loss, epochs, train_dataloader, eval_dataloader, test_dataloader, threshold, patience, patience_bool
 
 
-def train_network(loader, model, loss_fn, optimizer, epochs, device, threshold, model_save_path, patience, patience_bool, output_freq):
+def train_network(train_loader, test_loader, model, loss_fn, optimizer, epochs, device, threshold, model_save_path, patience, patience_bool, output_freq):
         losses = []
+        test_losses = []
         iters = []
         times = []
         step_num = 0
@@ -191,56 +181,63 @@ def train_network(loader, model, loss_fn, optimizer, epochs, device, threshold, 
                 # size = len(loader.dataset)
                 model.train()
                 train_epoch_start = time.perf_counter()
-                for iter, (features, label) in enumerate(loader, start = 0):
+                for iter, (features, label) in enumerate(test_loader, start = 0):
                         # print(f"Iter: {iter}\n Features: {features}\n Label: {label}\n\n")
                         train_step_start = time.perf_counter()
                         batch = len(label)
                         prediction = model(features.to(device))
-                        loss = loss_fn(prediction, label.to(device))
+                        train_loss = loss_fn(prediction, label.to(device))
 
-                        loss.backward()
+                        train_loss.backward()
                         optimizer.step() 
                         optimizer.zero_grad()
                         train_step_end = time.perf_counter()
                         train_step_dur = train_step_end - train_step_start                        
                         # print (f"\tIter {iter}\n\n")
-
+                
+                model.eval()
+                test_loss = 0
+                with torch.no_grad():
+                    for iter, (features, label) in enumerate(train_loader):
+                        prediction = model(features.to(device))
+                        test_loss = loss_fn(prediction, label.to(device))
+                
 
                 end = time.time()
                 step_num+=1
-                loss = loss.item()
-                losses.append(loss)
+                train_loss = train_loss.item()
+                losses.append(train_loss)
+                test_losses.append(test_loss)
                 iters.append(step_num)
                 times.append(train_step_dur) 
 
-                if loss<threshold:
+                if train_loss<threshold:
                         dyn_counter+=1
-                        folder = os.scandir(dynamic)
-                        for item in folder:
-                                os.remove(os.path.join(dynamic, item.name))
-                        torch.save(model.state_dict(), dynamic+'/'+f'dynamic_{dyn_counter}_epoch{epoch}')
-                        threshold = loss
+                        best_model_state = model.state_dict()
+                        threshold = train_loss
                         threshold_passed = True
                 else:
                         if patience_on and threshold_passed:
                             patience-=1
 
                 if patience == 0:
+                        torch.save(best_model_state, dynamic+'/'+f'dynamic_{dyn_counter}_epoch{epoch}')
                         print(f"=========Training ended due to patience 0=========")
                         break
 
                 train_epoch_end = time.perf_counter()
                 if epoch%output_freq == 0:
                         print(f"iteration: {step_num}")
-                        print(f"loss: {loss:>7f}")
-                        print (f"Loaders num: {len(loader)}\n")
+                        print(f"Train loss: {train_loss:>7f}")
+                        print(f"Test loss: {test_loss:>7f}")
+                        print (f"Loaders num: {len(train_loader)}\n")
                         print(f"Duration step {iter}: {train_step_dur}")
                         print(f"Epoch {epoch} duration {train_epoch_end - train_epoch_start} last iter {iter}")
                         print(f"ETA: {(train_epoch_end - train_epoch_start)*(epochs - epoch)} s")
 
 
 
-        return losses, iters, model, times
+        return losses, test_losses, iters, model, times
 
                                        
 # def eval_network(loader, model, loss_fn):

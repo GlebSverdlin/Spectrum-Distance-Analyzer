@@ -28,11 +28,11 @@ print(f"Using {device} device")
 
 network = start_network(device)
 
-optimizer, loss_fn, epochs, train_dl, eval_dl, threshold, patience, patience_bool = init_parameters(network, 1e-5, 30, 100, 0.3, 50, False) #model, LR, batch, epochs, threshold, patience, patience_on
+optimizer, loss_fn, epochs, train_dl, eval_dl, test_dl, threshold, patience, patience_bool = init_parameters(network, 1e-5, 30, 500, 0.2, 50, True) #model, LR, batch, epochs, threshold, patience, patience_on
 
 #ВОТ ЭТО МЕНЯТЬ ВРУЧНУЮ КАЖДЫЙ ЗАПУСК!!!
 print('ПРОВЕРИТЬ ОБНОВЛЕНИЕ ДАННЫХ ЛОГГИРОВАНИЯ')
-run = 'run25'
+run = 'run26'
 date = str(datetime.datetime.now().strftime("%Y-%b-%d-%H-%M-%S"))
 data_name = str(name+"_"+run+"_"+date)
 log_path = os.path.join(logging, data_name)
@@ -45,7 +45,7 @@ os.mkdir(model_save_path)
 
 
 
-tr, itr, model, times = train_network(train_dl, network, loss_fn, optimizer, epochs, device, threshold, model_save_path, patience, patience_bool, output_freq)
+tr, ev, itr, model, times = train_network(train_dl, test_dl, network, loss_fn, optimizer, epochs, device, threshold, model_save_path, patience, patience_bool, output_freq)
 
 
 torch.save(model.state_dict(), model_save_path+'/'+name+run+date)
@@ -62,7 +62,9 @@ with open(f"{log_path}/log.json",'x') as file:
     max_idx = tr.index(max)
     min_idx = tr.index(min)
     median = np.median(tr)
-        
+
+    ev_filter = savgol_filter(ev, window_length=int(len(ev)/10), polyorder = 3)
+
     fig, ax = plt.subplots(ncols=1, nrows=1, figsize=(15,7))
 
     tr_filter = savgol_filter(tr, window_length = int(len(tr)/10), polyorder = 3)
@@ -72,6 +74,7 @@ with open(f"{log_path}/log.json",'x') as file:
     plt.plot(1,1,color='w')
     plt.plot(1,1,color='w')
     plt.legend([str("Max: " + str(max)+'; Idx: '+str(max_idx)), str('Min: ' + str(min)+'; Idx: '+str(min_idx)),str('Avrg: '+ str(avrg)), str('Mdn: '+str(median))])
+    plt.plot(np.linspace(0, len(ev), num = len(ev)), ev_filter, color = 'g')
     plt.savefig(f"{log_path}/{data_name}.pdf")
     plt.show()
 
