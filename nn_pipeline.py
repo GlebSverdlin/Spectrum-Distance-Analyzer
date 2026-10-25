@@ -28,7 +28,7 @@ print(f"Using {device} device")
 
 network = start_network(device)
 
-optimizer, loss_fn, epochs, train_dl, eval_dl, test_dl, threshold, patience, patience_bool = init_parameters(network, 1e-5, 30, 500, 0.2, 50, True) #model, LR, batch, epochs, threshold, patience, patience_on
+optimizer, loss_fn, epochs, train_dl, eval_dl, test_dl, threshold, patience, patience_bool = init_parameters(network, 1e-5, 30, 1500, 0.4, 50, False) #model, LR, batch, epochs, threshold, patience, patience_on
 
 #ВОТ ЭТО МЕНЯТЬ ВРУЧНУЮ КАЖДЫЙ ЗАПУСК!!!
 print('ПРОВЕРИТЬ ОБНОВЛЕНИЕ ДАННЫХ ЛОГГИРОВАНИЯ')
@@ -45,8 +45,7 @@ os.mkdir(model_save_path)
 
 
 
-tr, ev, itr, model, times = train_network(train_dl, test_dl, network, loss_fn, optimizer, epochs, device, threshold, model_save_path, patience, patience_bool, output_freq)
-
+tr, ev, itr, model, times= train_network(train_dl, test_dl, network, loss_fn, optimizer, epochs, device, threshold, model_save_path, patience, patience_bool, output_freq)
 
 torch.save(model.state_dict(), model_save_path+'/'+name+run+date)
 
