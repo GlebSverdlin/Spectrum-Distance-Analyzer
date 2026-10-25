@@ -46,7 +46,7 @@ class SpectralDataset(Dataset):
             self.dataset_list.append({'data':data, 'label':label})
 
 
-        train_length = 1400
+        train_length = 1600
         test_length = 200
 
         positives = []
