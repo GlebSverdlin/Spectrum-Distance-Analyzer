@@ -18,26 +18,26 @@ class NeuralNetwork(nn.Module):
                 super().__init__()
                 self.neural_stack=nn.Sequential(
             #=======MODEL_1========
-                        # nn.Linear(7514, 2048),
-                        # nn.LeakyReLU(),
-                        # # nn.Linear(4096, 2048),
-                        # # nn.LeakyReLU(),
-                        # nn.Linear(2048, 1024),
-                        # nn.LeakyReLU(),
-                        # nn.Linear(1024, 512),
-                        # nn.LeakyReLU(),
-                        # nn.Linear(512, 256),
-                        # nn.LeakyReLU(),
-                        # nn.Linear(256, 128),
-                        # nn.LeakyReLU(),
-                        # nn.Linear(128, 50),
-                        # nn.LeakyReLU(),
-                        # nn.Linear(50,30),
-                        # nn.LeakyReLU(),
-                        # nn.Linear(30, 5),
-                        # nn.LeakyReLU(),
-                        # nn.Linear(5,1),
-                        # nn.Sigmoid()
+                        nn.Linear(7514, 4096),
+                        nn.ReLU(),
+                        nn.Linear(4096, 2048),
+                        nn.ReLU(),
+                        nn.Linear(2048, 1024),
+                        nn.ReLU(),
+                        nn.Linear(1024, 512),
+                        nn.ReLU(),
+                        nn.Linear(512, 256),
+                        nn.ReLU(),
+                        nn.Linear(256, 128),
+                        nn.ReLU(),
+                        nn.Linear(128, 50),
+                        nn.ReLU(),
+                        nn.Linear(50,30),
+                        nn.ReLU(),
+                        nn.Linear(30, 5),
+                        nn.ReLU(),
+                        nn.Linear(5,1),
+                        nn.Sigmoid()
                         #
             #=======MODEL_2========
                         # nn.Linear(7514, 1072),
@@ -64,20 +64,20 @@ class NeuralNetwork(nn.Module):
                         # nn.Sigmoid() 
 
             #=======MODEL_3========
-                        nn.Linear(7514, 500),
-                        nn.LeakyReLU(),
-                        nn.Linear(500, 300),
-                        nn.LeakyReLU(),
-                        nn.Linear(300, 200),
-                        nn.LeakyReLU(),
-                        nn.Linear(200, 100),
-                        nn.LeakyReLU(),
-                        nn.Linear(100,50),
-                        nn.LeakyReLU(),
-                        nn.Linear(50,25),
-                        nn.LeakyReLU(),
-                        nn.Linear(25,1),
-                        nn.Sigmoid()
+                        # nn.Linear(7514, 500),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(500, 300),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(300, 200),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(200, 100),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(100,50),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(50,25),
+                        # nn.LeakyReLU(),
+                        # nn.Linear(25,1),
+                        # nn.Sigmoid()
 
             #=======MODEL_4========
                         # nn.Linear(7514, 256),
@@ -213,7 +213,10 @@ def train_network(train_loader, test_loader, model, loss_fn, optimizer, epochs, 
 
                 if train_loss<threshold:
                         dyn_counter+=1
-                        best_model_state = model.state_dict()
+                        folder = os.scandir(dynamic)
+                        for item in folder:
+                                os.remove(os.path.join(dynamic, item.name))
+                        torch.save(model.state_dict(), dynamic+'/'+f'dynamic_{dyn_counter}_epoch{epoch}')
                         threshold = train_loss
                         threshold_passed = True
                 else:
@@ -221,7 +224,6 @@ def train_network(train_loader, test_loader, model, loss_fn, optimizer, epochs, 
                             patience-=1
 
                 if patience == 0:
-                        torch.save(best_model_state, dynamic+'/'+f'dynamic_{dyn_counter}_epoch{epoch}')
                         print(f"=========Training ended due to patience 0=========")
                         break
 
