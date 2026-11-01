@@ -43,7 +43,7 @@ class SpectralDataset(Dataset):
 
             label = np.asarray(label[0]).flatten()
 
-            self.dataset_list.append({'data':data, 'label':label})
+            self.dataset_list.append({'data':data, 'label':label, 'name':item.name})
 
 
         train_length = 1600
@@ -90,7 +90,8 @@ class SpectralDataset(Dataset):
         # return len(self.spectra)
         return len(self.spectra)
 
-
+    def getname(self, idx):
+        return self.spectra[idx]['name']
 
     def __getitem__(self, idx):
         time_start = time.perf_counter()
