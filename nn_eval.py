@@ -12,6 +12,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import shap
 import json
+from matplotlib.widgets import LassoSelector
+import matplotlib as mpl
 
 args = sys.argv[1:]
 option = "m:"
@@ -70,12 +72,13 @@ with torch.no_grad():
 
 average = np.average(errors)
 
-
 print(f'Average error: {average}')
 
 plt.figure(figsize=(25,10))
 plt.style.use('bmh')
 plt.plot(np.linspace(0, len(answers), num = len(answers)), corrects, '_')
+plt.axhline(y=0.25, color = 'r', linestyle = '-')
+plt.axhline(y=0.75, color = 'r', linestyle = '-')
 plt.scatter(np.linspace(0, len(answers), num = len(answers)), answers, c = errors, cmap = 'plasma', marker='x')
 plt.colorbar()
 plt.legend(['Average: '+str(average)])
@@ -83,13 +86,15 @@ plt.savefig(f"{log_path}/fig.pdf")
 
 cor = []
 ans = []
+err = []
 
 for i in range(len(answers)):
     cor.append(corrects[i].item())
     ans.append(answers[i].item())
+    err.append(errors[i].item())
 
 with open(f"{log_path}/log.json", 'x') as file:
-    json.dump({"network" : model_name, "answers" : ans, "corrects" : cor}, file, indent = 4)
+    json.dump({"network" : model_name, "answers" : ans, "corrects" : cor, "errors" : err}, file, indent = 4)
 
 plt.show()
 
