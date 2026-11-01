@@ -5,6 +5,8 @@ import numpy as np
 import sys
 import getopt
 import json
+from secret import *
+from dataloader import *
 
 def plot_losses(losses, save):
     tr = []
@@ -29,21 +31,84 @@ def plot_losses(losses, save):
     plt.legend([str("Max: " + str(max)+'; Idx: '+str(max_idx)), str('Min: ' + str(min)+'; Idx: '+str(min_idx)),str('Avrg: '+ str(avrg)), str('Mdn: '+str(median))])
     plt.show()
 
-def plot_eval(data):
-    answers = []
-    corrects = []
-    
-    for i in data:
-        if data.index(i)%2!=0:
-            answers.append(i)
-            corrects.append(data[data.index(i)-1])
-    
-    plt.style.use('bmh')
-    plt.plot(np.linspace(0, len(answers), num = len(answers)), corrects, '_')
-    plt.scatter(np.linspace(0, len(answers), num = len(answers)), answers, c = errors, cmap = 'plasma', marker='x')
-    plt.colorbar()
-    plt.legend(['Average: '+str(average)])
+def plot_eval(path, spectra):    
+    with open(path, 'r') as file:
+        data = json.load(file)
 
+    answers = data['answers']
+    lables = data['corrects']
+    errors = data['errors'] 
+    
+    true_positives = [[],[],[]]
+    true_negatives = [[],[],[]]
+    false_positives = [[],[],[]]
+    false_negatives = [[],[],[]]
+
+    for i in answers:
+        if lables[answers.index(i)] == 1:
+            if errors[answers.index(i)] <= 0.25:
+                true_positives[0].append(i)
+                true_positives[1].append(spectra.getname(answers.index(i)))
+                true_positives[2].append(answers.index(i))
+
+            else:
+                false_positives[0].append(i)
+                false_positives[1].append(spectra.getname(answers.index(i)))
+                false_positives[2].append(answers.index(i))
+
+        else:
+            if errors[answers.index(i)] <= 0.25:
+                true_negatives[0].append(i)
+                true_negatives[1].append(spectra.getname(answers.index(i)))
+                true_negatives[2].append(answers.index(i))
+
+            else:
+                false_negatives[0].append(i)
+                false_negatives[1].append(spectra.getname(answers.index(i)))
+                false_negatives[2].append(answers.index(i))
+
+    
+    print(true_negatives[1])
+
+    plt.style.use('bmh')
+
+    fig, ax = plt.subplots(2,2)
+
+    delta = '\\Delta_{err}'
+    
+    # ax[0,0].scatter(np.linspace(0, len(false_negatives[0]), num = len(false_negatives[0])), false_negatives[0], color = 'r')
+    # ax[1,0].scatter(np.linspace(0, len(true_negatives[0]), num = len(true_negatives[0])), true_negatives[0])
+    ax[0,0].set_title(f'False Negatives, {len(false_negatives[0])} samples.')
+    ax[1,0].set_title(f'True Negatives ($%s$ < 0.25), {len(true_negatives[0])} samples.'%delta)
+    #
+    # ax[0,1].scatter(np.linspace(0, len(false_positives[0]), num = len(false_positives[0])), false_positives[0], color = 'r')
+    # ax[1,1].scatter(np.linspace(0, len(true_positives[0]), num = len(true_positives[0])), true_positives[0])
+    ax[0,1].set_title(f'False Positives, {len(false_positives[0])} samples.')
+    ax[1,1].set_title(f'True Positives ($%s$ < 0.25), {len(true_positives[0])} samples.'%delta)
+
+    for i in false_negatives[2]:
+        ax[0,0].plot(spectra[i][0], alpha = 1/len(false_negatives), color = 'b')
+
+    for i in true_negatives[2]:
+        ax[1,0].plot(spectra[i][0], alpha = 1/len(true_negatives), color = 'b')
+  
+    for i in false_positives[2]:
+        ax[0,1].plot(spectra[i][0], alpha = 1/len(false_positives), color = 'b')
+
+    for i in true_positives[2]:
+        ax[1,1].plot(spectra[i][0], alpha = 1/len(true_positives), color = 'b')
+    #
+    # ax[0,0].set_ylim(0, 3)
+    # ax[1,0].set_ylim(0, 3)
+    # ax[0,1].set_ylim(0, 3)
+    # ax[1,1].set_ylim(0, 3)
+
+    #
+    # plt.plot(np.linspace(0, len(answers), num = len(answers)), corrects, '_')
+    # plt.scatter(np.linspace(0, len(answers), num = len(answers)), answers, c = errors, cmap = 'plasma', marker='x')
+    # plt.colorbar()
+    # plt.legend(['Average: '+str(average)])
+    #
     plt.show()
 
 def plot_from_json(path):
@@ -72,15 +137,17 @@ def plot_from_json(path):
 
 
 args = sys.argv[1:]
-option = "m:"
-long_option = ["model"]
+option = "p:"
+long_option = ["path"]
 
 args, vals = getopt.getopt(args,option, long_option)
 
 try:
     for arg, val in args:
-        if arg in ("-m", "--model"):
+        if arg in ("-p", "--path"):
             json_path = sys.argv[2]
 
 except: print("ERR")
-plot_from_json(json_path)
+
+eval_data = SpectralDataset('aspcap', 'eval')
+plot_eval(json_path, eval_data)
