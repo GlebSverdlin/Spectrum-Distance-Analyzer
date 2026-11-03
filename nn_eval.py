@@ -33,8 +33,9 @@ except: print(str(getopt.error))
 device = torch.accelerator.current_accelerator().type if torch.accelerator.is_available() else "cpu"
 print(f"Using {device} device")
 
-eval_data = SpectralDataset('aspcap_nz', 'eval')
-
+eval_data = SpectralDataset('research_tp', 'res')
+eval_data2 = SpectralDataset('research_tn', 'res')
+eval_data.concatenate(eval_data2)
 model = NeuralNetwork()
 model.load_state_dict(torch.load(path, weights_only = True))
 

@@ -31,7 +31,10 @@ except: print(str(getopt.error))
 device = torch.accelerator.current_accelerator().type if torch.accelerator.is_available() else "cpu"
 print(f"Using {device} device")
 
-eval_data = SpectralDataset('aspcap_nz', 'eval')
+wave_data = SpectralDataset('aspcap', 'eval')
+eval_data = SpectralDataset('research_tp', 'res')
+eval_data_2 = SpectralDataset('research_tn', 'res')
+eval_data.concatenate(eval_data_2)
 
 model = NeuralNetwork().to(device)
 model.load_state_dict(torch.load(path, weights_only = True, map_location=torch.device('cpu')))
@@ -41,16 +44,17 @@ data_name = str(name+"_"+date)
 
 log_path = os.path.join(logs_shap, str(data_name+'-test_date-'+date))
 os.mkdir(log_path) 
-eval_dataloader = DataLoader(eval_data, batch_size=len(eval_data), shuffle=False)
+
+eval_loader = DataLoader(eval_data, batch_size=len(eval_data), shuffle=False)
 model.eval()
 
-for iter, batch in enumerate(eval_dataloader):
+for iter, batch in enumerate(eval_loader):
     #
     # random.shuffle(batch)
-    # background_data = batch[0][:len(eval_data)-100]
-    test_data_neg = batch[0][:50]
-    test_data_pos = batch[0][len(eval_data)-50:len(eval_data)]
-    background_data = batch[0][50:len(eval_data)-50]
+    background_data = batch[0][30:len(eval_data)-30]
+    test_data_neg = batch[0][:30]
+    test_data_pos = batch[0][len(eval_data)-30:len(eval_data)]
+
 
     print(f"Shapes: tp:{np.shape(test_data_pos)}, tn:{np.shape(test_data_neg)}, bg:{np.shape(background_data)}")
 
@@ -82,13 +86,33 @@ for iter, batch in enumerate(eval_dataloader):
     for i in average_values:
         c.append(0+i)
 
+    peaks = []
+    for i in average_values:
+        if i >= 3*std_dev:
+            peaks.append(average_values.index(i))
 
-    plt.figure(figsize=(25,10))
+    print(peaks)
+    print(len(peaks))
+
+    wave = wave_data.get_wave()
+
+    zero_idx = np.linspace(0,245,num=246).tolist()+np.linspace(3274,3584,num=3584-3274+1).tolist()+np.linspace(6080,6343, num = 6343-6080+1).tolist()+np.linspace(8335,8575,num=8575-8335).tolist()
+    print(len(wave))
+
+    fig, ax = plt.subplots(1,1)
     plt.style.use('bmh')
-    plt.scatter(np.linspace(0, len(average_values), num = len(average_values)), average_values, c = c, cmap = 'plasma', marker = 'x')
-    plt.plot(np.linspace(0, len(average_values), num = len(average_values)), np.full(shape = len(average_values), fill_value= 3*std_dev), color = 'lime')
-    plt.plot(np.linspace(0, len(average_values), num = len(average_values)), np.full(shape = len(average_values), fill_value= -3*std_dev), color = 'lime')
-    plt.colorbar()
+
+    image = ax.scatter(np.linspace(0, len(average_values), num = len(average_values)), average_values, c = c, cmap = 'plasma', marker = 'x')
+
+    ax.axhline(y=3*std_dev, color = 'lime')
+    ax.axhline(y=-3*std_dev, color = 'lime')
+
+    # ax.plot(np.linspace(0, len(average_values), num = len(average_values)), np.full(shape = len(average_values), fill_value= 3*std_dev), color = 'lime')
+    # ax.plot(np.linspace(0, len(average_values), num = len(average_values)), np.full(shape = len(average_values), fill_value= -3*std_dev), color = 'lime') 
+    fig.colorbar(image) 
+    
+    
+
     # plt.savefig(f"{log_path}/fig.pdf")
     plt.show()
     break
