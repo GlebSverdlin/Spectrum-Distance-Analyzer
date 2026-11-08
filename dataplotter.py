@@ -11,6 +11,7 @@ import astropy
 from astropy.io import fits
 from astropy.table import Table
 import matplotlib.patches as ptc
+from matplotlib import ticker
 
 
 def plot_losses(losses, save):
@@ -110,6 +111,8 @@ def plot_eval(path, spectra):
     teff_fp = teff_fp_1+teff_fp_2
     teff_fn = teff_fn_1+teff_fn_2
 
+
+
     logg_tp = logg_tp_1+logg_tp_2
     logg_tn = logg_tn_1+logg_tn_2
     logg_fp = logg_fp_1+logg_fp_2
@@ -127,25 +130,34 @@ def plot_eval(path, spectra):
     ax.scatter(teff_fp, logg_fp, color='g', marker = 'o', label = 'False positive samples')
     ax.scatter(teff_tn, logg_tn, color='b', marker = 'x', label = 'True negative samples')
     ax.scatter(teff_fn, logg_fn, color='k', marker = 'o', label = 'False negative samples')
-    patch_m = ptc.Rectangle((2400, 0), 1300, 6, facecolor = 'darkorange', alpha=0.2)
-    patch_k = ptc.Rectangle((3700, 0), 1500, 6, facecolor = 'yellow', alpha=0.2)
-    patch_g = ptc.Rectangle((5200, 0), 800, 6, facecolor = 'lemonchiffon', alpha=0.2)
-    patch_f = ptc.Rectangle((6000, 0), 1500, 6, facecolor = 'lightsteelblue', alpha=0.2)
-    patch_a = ptc.Rectangle((7500, 0), 2500, 6, facecolor = 'deepskyblue', alpha=0.2)
-    patch_b = ptc.Rectangle((10000, 0), 20000, 6, facecolor = 'blue', alpha=0.2)
+    ax.set_title('$T_{eff}$ to $log_{g}$ relation between 4 sample groups')
 
-    ax.add_patch(patch_b)
-    ax.add_patch(patch_a)
-    ax.add_patch(patch_f)
-    ax.add_patch(patch_g)
-    ax.add_patch(patch_k)
-    ax.add_patch(patch_m)
-    ax.text(2450, 5.5, 'M', size='x-large', weight='bold')
-    ax.text(3750, 5.5, 'K', size='x-large', weight='bold')
-    ax.text(5250, 5.5, 'G', size='x-large', weight='bold')
-    ax.text(6050, 5.5, 'F', size='x-large', weight='bold')
-    ax.text(7550, 5.5, 'A', size='x-large', weight='bold' )
-    ax.text(10050, 5.5, 'B', size='x-large', weight='bold')
+    # ax[1].scatter(teff_tp, logg_tp, color='r', marker = 'o')
+    # ax[1].scatter(teff_fp, logg_fp, color='g', marker = '^')
+    # ax[1].scatter(teff_tn, logg_tn, color='b', marker = '^')
+    # ax[1].scatter(teff_fn, logg_fn, color='k', marker = 'o')
+    # ax[1].set_title('$T_{eff}$ to $log_{g}$ with hypothetical 100% accuracy')
+
+
+    # patch_m = ptc.Rectangle((2400, 0), 1300, 6, facecolor = 'darkorange', alpha=0.2)
+    # patch_k = ptc.Rectangle((3700, 0), 1500, 6, facecolor = 'yellow', alpha=0.2)
+    # patch_g = ptc.Rectangle((5200, 0), 800, 6, facecolor = 'lemonchiffon', alpha=0.2)
+    # patch_f = ptc.Rectangle((6000, 0), 1500, 6, facecolor = 'lightsteelblue', alpha=0.2)
+    # patch_a = ptc.Rectangle((7500, 0), 2500, 6, facecolor = 'deepskyblue', alpha=0.2)
+    # patch_b = ptc.Rectangle((10000, 0), 20000, 6, facecolor = 'blue', alpha=0.2)
+    #
+    # ax.add_patch(patch_b)
+    # ax.add_patch(patch_a)
+    # ax.add_patch(patch_f)
+    # ax.add_patch(patch_g)
+    # ax.add_patch(patch_k)
+    # ax.add_patch(patch_m)
+    # ax.text(2450, 5.5, 'M', size='x-large', weight='bold')
+    # ax.text(3750, 5.5, 'K', size='x-large', weight='bold')
+    # ax.text(5250, 5.5, 'G', size='x-large', weight='bold')
+    # ax.text(6050, 5.5, 'F', size='x-large', weight='bold')
+    # ax.text(7550, 5.5, 'A', size='x-large', weight='bold' )
+    # ax.text(10050, 5.5, 'B', size='x-large', weight='bold')
 
 
 
@@ -155,7 +167,14 @@ def plot_eval(path, spectra):
     ax.set_ylim(0, 6)
     ax.set_xlabel('T$_{eff}$')
     ax.set_ylabel('log$_{g}$')
-    ax.set_title('$T_{eff}$ to $log_{g}$ relation between 4 sample groups.')
+    ax.yaxis.set_major_locator(ticker.MultipleLocator(0.5))
+    ax.yaxis.set_minor_locator(ticker.MultipleLocator(0.25))
+    ax.xaxis.set_minor_locator(ticker.MultipleLocator(250))
+    # ax[1].set_xlim(2000, 16000)
+    # ax[1].set_ylim(0, 6)
+    # ax[1].set_xlabel('T$_{eff}$')
+    # ax[1].set_ylabel('log$_{g}$')
+    # ax.set_title('$T_{eff}$ to $log_{g}$ relation between 4 sample groups.')
     ax.legend()
     
     

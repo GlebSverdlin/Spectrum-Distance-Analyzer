@@ -113,12 +113,11 @@ class SpectralDataset(Dataset):
         wave_df = pd.read_csv(os.path.join(self.data_dir, name), usecols=["wave"], index_col=False).to_numpy(dtype=np.double, na_value=0.0)
         flux_df = pd.read_csv(os.path.join(self.data_dir, name), usecols=["flux"], index_col=False).to_numpy(dtype=np.double, na_value=0.0)
         flux=flux_df.tolist()
-        flux.reverse()
+        # flux.reverse()
         wave=wave_df.tolist()
         for i in flux:
-            if i == 0:
-                del wave[flux.index(i)]
-            print(i)
+            if i[0] == 0.0:
+                wave.pop(flux.index(i))
         return wave
 
     def getname(self, idx):
